@@ -19,6 +19,7 @@ const path_1 = __importDefault(require("path"));
 const fs_1 = __importDefault(require("fs"));
 const sqlite3_1 = __importDefault(require("sqlite3"));
 const sqlite_1 = require("sqlite");
+const Routes_1 = __importDefault(require("./src/routes/Routes"));
 // Configuração inicial
 dotenv_1.default.config();
 const app = (0, express_1.default)();
@@ -55,10 +56,7 @@ function createTables(database) {
     });
 }
 // Rotas 
-// Rota de teste
-app.get('/', (req, res) => {
-    res.send('API com SQLite está rodando');
-});
+app.use("/", Routes_1.default);
 // Inicialização do servidor
 function startServer() {
     return __awaiter(this, void 0, void 0, function* () {

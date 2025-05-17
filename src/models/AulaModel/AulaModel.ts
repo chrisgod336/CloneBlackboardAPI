@@ -30,10 +30,11 @@ export default class Aula {
 
     //deletar uma aula
     public static async delete(id:number): Promise<object>{
-        //Deletar todas as aula_parte
-        //Deletar todas as aula_questao
-        //Deletar todas as aula_aluno
-        //Deletar todas as aula_aluno_questao
+        //Deletar todas as tb_aula_aluno_questao dessa aula
+        //Deletar todas as tb_aula_aluno dessa aula
+        //Deletar todas as tb_aula_questao dessa aula
+        //Deletar todas as tb_aula_parte dessa aula
+        //Deletar a tb_aula dessa aula
         //Recalcular as questoes de todos os alunos na tb_aluno
         return{
 

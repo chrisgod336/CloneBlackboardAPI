@@ -6,6 +6,8 @@ import fs from 'fs';
 import sqlite3 from 'sqlite3';
 import { open, Database } from 'sqlite';
 
+import router from './src/routes/Routes';
+
 // Configuração inicial
 dotenv.config();
 const app = express();
@@ -51,10 +53,7 @@ declare module 'express' {
 }
 
 // Rotas 
-// Rota de teste
-app.get('/', (req, res) => {
-  res.send('API com SQLite está rodando');
-});
+app.use("/", router);
 
 // Inicialização do servidor
 async function startServer() {

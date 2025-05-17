@@ -42,9 +42,26 @@ export default class AlunoModel {
     }
 
     //criar aluno
-    
+    public static async post(tx_nome:string, tx_login:string): Promise<object>{
+        return {
+
+        }
+    }
 
     //atualizar aluno
+    public static async put(id:number, tx_nome:string, tx_login:string, tx_nivel:string, tx_nu_acertos_texto:number,tx_nu_erros_texto:number, tx_nu_acertos_imagem:number,tx_nu_erros_imagem:number, 
+        tx_nu_acertos_video:number,tx_nu_erros_video:number): Promise<object>{
+        return {
+            
+        }
+    }
 
     //deletar aluno
+    public static async delete(id:number): Promise<object>{
+        return {
+            //Deletar todos os registro do aluno da tb_aula_aluno_questao
+            //Deletar todos os registro do aluno da tb_aula_aluno
+            //Deletar registro do aluno da tb_aluno
+        }
+    }
 }

@@ -10,7 +10,7 @@ export default class Admin{
     }
 
     //Buscar o administrador pelo login e pela senha
-    public static get(tx_login:string, tx_senha:string): object {
+    public static async get(tx_login:string, tx_senha:string): Promise<object> {
         return {
 
         }

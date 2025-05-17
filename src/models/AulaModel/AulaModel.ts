@@ -8,28 +8,28 @@ export default class Aula {
     }
 
     //buscar todas as aulas
-    public static getAll(): object{
+    public static async getAll(): Promise<object>{
         return {
 
         }
     }
 
     //criar uma aula
-    public static post(id:number, tx_descricao: string): object{
+    public static async post(tx_descricao: string): Promise<object>{
         return {
 
         }
     }
 
     //editar uma aula
-    public static put(id:number, tx_descricao: string): object{
+    public static async put(id:number, tx_descricao: string): Promise<object>{
         return {
 
         }
     }
 
     //deletar uma aula
-    public static delete(id:number): object{
+    public static async delete(id:number): Promise<object>{
         //Deletar todas as aula_parte
         //Deletar todas as aula_questao
         //Deletar todas as aula_aluno

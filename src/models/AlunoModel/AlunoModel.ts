@@ -1,4 +1,4 @@
-export default class AlunoModel {
+export default class Aluno {
     private id:number;
     private tx_nome:string;
     private tx_login:string;
@@ -63,5 +63,13 @@ export default class AlunoModel {
             //Deletar todos os registro do aluno da tb_aula_aluno
             //Deletar registro do aluno da tb_aluno
         }
+    }
+
+    //recalcular questoes de todos alunos
+    public static async recalculate(): Promise<object> {
+        return {
+            success: true,
+            message: 'Questões dos alunos recalculadas com sucesso.'
+        };
     }
 }

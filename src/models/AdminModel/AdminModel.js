@@ -21,8 +21,6 @@ class Admin {
         return __awaiter(this, void 0, void 0, function* () {
             var _a, _b, _c;
             try {
-                console.log(tx_login);
-                console.log(tx_senha);
                 const sql_search = `
             SELECT COUNT(*) AS count
                 FROM tb_admin 
@@ -44,7 +42,7 @@ class Admin {
                 }
             }
             catch (error) {
-                console.log(error);
+                console.error(error);
                 return {
                     success: false,
                     message: (_c = error === null || error === void 0 ? void 0 : error.message) !== null && _c !== void 0 ? _c : 'Error ao tentar logar.'

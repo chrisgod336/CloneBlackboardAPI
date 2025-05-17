@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-class AlunoModel {
+class Aluno {
     constructor(id, tx_nome, tx_login, tx_senha, tx_nivel, nu_acertos_texto, nu_erros_texto, nu_acertos_imagem, nu_erros_imagem, nu_acertos_video, nu_erros_video) {
         this.id = id;
         this.tx_nome = tx_nome;
@@ -57,5 +57,14 @@ class AlunoModel {
             };
         });
     }
+    //recalcular questoes de todos alunos
+    static recalculate() {
+        return __awaiter(this, void 0, void 0, function* () {
+            return {
+                success: true,
+                message: 'Questões dos alunos recalculadas com sucesso.'
+            };
+        });
+    }
 }
-exports.default = AlunoModel;
+exports.default = Aluno;

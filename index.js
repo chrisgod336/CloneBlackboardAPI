@@ -55,7 +55,8 @@ function createTables(database) {
         }
     });
 }
-// Rotas 
+// Rotas
+app.use(express_1.default.json());
 app.use("/", Routes_1.default);
 // Inicialização do servidor
 function startServer() {

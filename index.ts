@@ -52,7 +52,8 @@ declare module 'express' {
   }
 }
 
-// Rotas 
+// Rotas
+app.use(express.json()) 
 app.use("/", router);
 
 // Inicialização do servidor

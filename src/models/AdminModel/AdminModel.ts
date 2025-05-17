@@ -16,9 +16,6 @@ export default class Admin{
 
         try{
 
-            console.log(tx_login);
-            console.log(tx_senha);
-
             const sql_search = `
             SELECT COUNT(*) AS count
                 FROM tb_admin 
@@ -41,7 +38,7 @@ export default class Admin{
             }
 
         }catch(error:any){
-            console.log(error);
+            console.error(error);
             return {
                 success: false,
                 message:  error?.message??'Error ao tentar logar.'

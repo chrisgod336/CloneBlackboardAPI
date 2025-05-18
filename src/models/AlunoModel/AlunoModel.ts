@@ -1,3 +1,5 @@
+import { db } from "../../..";
+
 export default class Aluno {
     private id:number;
     private tx_nome:string;
@@ -27,49 +29,199 @@ export default class Aluno {
         this.nu_erros_video = nu_erros_video;
     }
 
+
     //buscar dados do aluno
     public static async get(id:number): Promise<object> {
-        return {
+        try{
 
+            const sql_search = `SELECT * FROM tb_aluno WHERE id = ?`;
+
+            const response = await db.all(sql_search, [id]);
+
+            if(response && response.length){
+                return {
+                    success: true,
+                    message: 'Aluno encontrado com sucesso.',
+                    data: response[0]
+                }
+            }else{
+                throw new Error('Erro ao tentar buscar dados do aluno.');
+            }
+
+        }catch(error:any){
+            console.error(error);
+            return {
+                success: false,
+                message: error?.message??"Erro ao tentar buscar dados do aluno."
+            }
         }
     }
 
     //buscar dados dos alunos
     public static async getAll(): Promise<object> {
-        return {
-            
+        try{
+
+            const sql_search = "SELECT * FROM tb_aluno ORDER BY id";
+
+            const response = await db.all(sql_search);
+
+            if(response){
+                return {
+                    success: true,
+                    message: 'Alunos encontrados com sucesso.',
+                    data: response
+                }
+            }else{
+                throw new Error('Erro ao tentar buscar alunos.');
+            }
+
+        }catch(error:any){
+            console.error(error);
+            return {
+                success: false,
+                message: error?.message??'Erro ao tentar buscar alunos.',
+            }
         }
     }
 
     //criar aluno
     public static async post(tx_nome:string, tx_login:string): Promise<object>{
-        return {
+        try{
 
+            const sql_insert = `INSERT INTO tb_aluno (tx_nome, tx_login) VALUES (?,?)`;
+
+            const response = await db.run(sql_insert, [tx_nome, tx_login]);
+
+            if(response?.lastID){
+                return {
+                    success: true,
+                    message: 'Aluno criado com sucesso.',
+                    data: {id: response.lastID}
+                }
+            }else{
+                throw new Error('Erro ao tentar criar aluno.');
+            }
+
+        }catch(error:any){
+            console.error(error);
+            return {
+                success: false,
+                message: error?.message??'Erro ao tentar criar aluno.',
+            }
         }
     }
 
     //atualizar aluno
-    public static async put(id:number, tx_nome:string, tx_login:string, tx_nivel:string, tx_nu_acertos_texto:number,tx_nu_erros_texto:number, tx_nu_acertos_imagem:number,tx_nu_erros_imagem:number, 
-        tx_nu_acertos_video:number,tx_nu_erros_video:number): Promise<object>{
-        return {
-            
+    public static async put(id:number, tx_nome:string, tx_login:string, tx_nivel:string, nu_acertos_texto:number,nu_erros_texto:number, nu_acertos_imagem:number,nu_erros_imagem:number, 
+        nu_acertos_video:number,nu_erros_video:number): Promise<object>{
+        try{
+
+            const sql_update = `
+            UPDATE tb_aluno 
+            SET tx_nome = ?, tx_login = ?, tx_nivel = ?, nu_acertos_texto = ?, nu_erros_texto = ?, nu_acertos_imagem = ?, nu_erros_imagem = ?, nu_acertos_video = ?, nu_erros_video = ? 
+            WHERE id = ?`;
+
+            const response = await db.run(sql_update, [tx_nome, tx_login, tx_nivel, nu_acertos_texto, nu_erros_texto, nu_acertos_imagem, nu_erros_imagem, nu_acertos_video, nu_erros_video, id]);
+
+            if(response){
+                return {
+                    success: true,
+                    message: 'Aluno editado com sucesso.',
+                }
+            }else{
+                throw new Error('Erro ao tentar editar aluno.');
+            }
+
+        }catch(error:any){
+            console.error(error);
+            return{
+                success: false,
+                message: error?.message??'Erro ao tentar editar aluno.'
+            }
         }
     }
 
     //deletar aluno
     public static async delete(id:number): Promise<object>{
-        return {
-            //Deletar todos os registro do aluno da tb_aula_aluno_questao
-            //Deletar todos os registro do aluno da tb_aula_aluno
-            //Deletar registro do aluno da tb_aluno
+        try{
+
+            const queries = [
+                `DELETE FROM tb_aula_aluno_questao WHERE id_aluno = ?`,
+                `DELETE FROM tb_aula_aluno WHERE id_aluno = ?`,
+                `DELETE FROM tb_aluno WHERE id = ?`
+            ];
+
+            for (const query of queries) {
+                await db.run(query, [id]);
+            }
+
+            return {
+                sucess: true,
+                message: 'Aluno deletado com sucesso.',
+            }
+
+        }catch(error:any){
+            console.error(error);
+            return {
+                success: false,
+                message: error?.message??'Erro ao tentar deletar aluno.',
+            }
         }
     }
 
     //recalcular questoes de todos alunos
     public static async recalculate(): Promise<object> {
-        return {
-            success: true,
-            message: 'Questões dos alunos recalculadas com sucesso.'
-        };
+        try{
+
+            const sql_search = `SELECT id FROM tb_aluno`;
+
+            const response = await db.all(sql_search);
+
+            if(response){
+                for (const aluno of response) {
+                    const id = aluno?.id;
+                    if(id){
+                        const sql_count = `
+                        SELECT 
+                            (SELECT COUNT(*) FROM  tb_aula_aluno_questao WHERE id_aluno = ? AND lo_acerto = 'S' AND tx_tipo = 'texto') AS nu_acertos_texto,
+                            (SELECT COUNT(*) FROM  tb_aula_aluno_questao WHERE id_aluno = ? AND lo_acerto = 'N' AND tx_tipo = 'texto') AS nu_erros_texto,
+                            (SELECT COUNT(*) FROM  tb_aula_aluno_questao WHERE id_aluno = ? AND lo_acerto = 'S' AND tx_tipo = 'imagem') AS nu_acertos_imagem,
+                            (SELECT COUNT(*) FROM  tb_aula_aluno_questao WHERE id_aluno = ? AND lo_acerto = 'N' AND tx_tipo = 'imagem') AS nu_erros_imagem,
+                            (SELECT COUNT(*) FROM  tb_aula_aluno_questao WHERE id_aluno = ? AND lo_acerto = 'S' AND tx_tipo = 'video') AS nu_acertos_video,
+                            (SELECT COUNT(*) FROM  tb_aula_aluno_questao WHERE id_aluno = ? AND lo_acerto = 'N' AND tx_tipo = 'video') AS nu_erros_video
+                        `;
+
+                        const response_count = await db.all(sql_count, [id, id, id, id, id, id]);
+
+                        if(response_count && response_count.length){
+                            const nu_acertos_texto = response_count[0]?.nu_acertos_texto??0
+                            const nu_erros_texto = response_count[0]?.nu_erros_texto??0
+                            const nu_acertos_imagem = response_count[0]?.nu_acertos_imagem??0
+                            const nu_erros_imagem = response_count[0]?.nu_erros_imagem??0
+                            const nu_acertos_video = response_count[0]?.nu_acertos_video??0
+                            const nu_erros_video = response_count[0]?.nu_erros_video??0
+
+                            const sql_update = `
+                            UPDATE tb_aluno 
+                            SET nu_acertos_texto = ?, nu_erros_texto = ?, nu_acertos_imagem = ?, nu_erros_imagem = ?, nu_acertos_video = ?, nu_erros_video = ?
+                            `;
+
+                            const response_update = await db.run(sql_update, [nu_acertos_texto, nu_erros_texto, nu_acertos_imagem, nu_erros_imagem, nu_acertos_video, nu_erros_video]);
+                        }
+                    }
+                }
+            }
+
+            return {
+                success: true,
+                message: 'Questões dos alunos recalculadas com sucesso.'
+            };
+        }catch(error:any){
+            console.error(error);
+            return {
+                success: false,
+                message: error?.message??'Erro ao tentar recalcular questões dos alunos.',
+            }
+        }
     }
 }

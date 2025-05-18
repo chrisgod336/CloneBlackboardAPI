@@ -30,7 +30,6 @@ CREATE TABLE IF NOT EXISTS tb_aula_questao (
     tx_descricao TEXT NOT NULL,
     tx_alternativas VARCHAR(225) NOT NULL,
     id_resposta INTEGER NOT NULL,
-    tx_tipo VARCHAR(225) NOT NULL,
     FOREIGN KEY (id_aula) REFERENCES tb_aula(id),
     FOREIGN KEY (id_parte) REFERENCES tb_aula_parte(id)
 );
@@ -69,6 +68,7 @@ CREATE TABLE IF NOT EXISTS tb_aula_aluno_questao (
     id_questao INTEGER NOT NULL,
     id_resposta_aluno INTEGER NOT NULL,
     lo_acerto CHAR(1) DEFAULT 'N',
+    tx_tipo VARCHAR(225) NOT NULL,
     PRIMARY KEY (id_aluno, id_aula, id_questao),
     FOREIGN KEY (id_aluno) REFERENCES tb_aluno(id),
     FOREIGN KEY (id_aula) REFERENCES tb_aula(id),

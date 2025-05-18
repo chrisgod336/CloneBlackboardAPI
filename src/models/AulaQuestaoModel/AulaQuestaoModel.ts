@@ -7,16 +7,14 @@ export default class AulaQuestao {
     private tx_descricao:string;
     private tx_alternativas:string;
     private id_resposta:number;
-    private tx_tipo:string;
 
-    constructor(id:number, id_aula:number, id_parte:number, tx_descricao:string, tx_alternativas:string, id_resposta:number, tx_tipo:string){
+    constructor(id:number, id_aula:number, id_parte:number, tx_descricao:string, tx_alternativas:string, id_resposta:number){
         this.id = id;
         this.id_aula = id_aula;
         this.id_parte = id_parte;
         this.tx_descricao = tx_descricao;;
         this.tx_alternativas = tx_alternativas;
         this.id_resposta = id_resposta;
-        this.tx_tipo = tx_tipo;
     }
 
     //buscas questoes da aula
@@ -49,15 +47,15 @@ export default class AulaQuestao {
     }
 
     //criar questao da aula
-    public static async post(id_aula:number, id_parte:number, tx_descricao:string, tx_alternativas:string, id_resposta:number, tx_tipo:string): Promise<object> {
+    public static async post(id_aula:number, id_parte:number, tx_descricao:string, tx_alternativas:string, id_resposta:number): Promise<object> {
         try{
 
             const sql_inset = `
-            INSERT INTO tb_aula_questao (id_aula, id_parte, tx_descricao, tx_alternativas, id_resposta, tx_tipo)
+            INSERT INTO tb_aula_questao (id_aula, id_parte, tx_descricao, tx_alternativas, id_resposta)
             VALUES (?, ?, ?, ?, ?, ?);
             `;
 
-            const response = await db.run(sql_inset, [id_aula, id_parte, tx_descricao, tx_alternativas, id_resposta, tx_tipo]);
+            const response = await db.run(sql_inset, [id_aula, id_parte, tx_descricao, tx_alternativas, id_resposta]);
 
             if(response?.lastID){
                 return {
@@ -81,16 +79,16 @@ export default class AulaQuestao {
     }
 
     //atualizar questao da aula
-    public static async put(id:number, id_aula:number, id_parte:number, tx_descricao:string, tx_alternativas:string, id_resposta:number, tx_tipo:string): Promise<object> {
+    public static async put(id:number, id_aula:number, id_parte:number, tx_descricao:string, tx_alternativas:string, id_resposta:number): Promise<object> {
         try{
 
             const sql_update = `
             UPDATE tb_aula_questao 
-            SET id_parte = ?, tx_descricao = ?, tx_alternativas = ?, id_resposta = ?, tx_tipo = ?
+            SET id_parte = ?, tx_descricao = ?, tx_alternativas = ?, id_resposta = ?
             WHERE id_aula = ? AND id = ?
             `;
 
-            const response = await db.run(sql_update, [id_parte, tx_descricao, tx_alternativas, id_resposta, tx_tipo, id_aula, id]);
+            const response = await db.run(sql_update, [id_parte, tx_descricao, tx_alternativas, id_resposta, id_aula, id]);
 
             if(response){
                 return {

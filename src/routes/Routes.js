@@ -6,6 +6,8 @@ const Controllers_2 = require("../controllers/Controllers");
 const Controllers_3 = require("../controllers/Controllers");
 const Controllers_4 = require("../controllers/Controllers");
 const Controllers_5 = require("../controllers/Controllers");
+const Controllers_6 = require("../controllers/Controllers");
+const Controllers_7 = require("../controllers/Controllers");
 const router = (0, express_1.Router)();
 const asyncHandler = (fn) => (req, res, next) => Promise.resolve(fn(req, res, next)).catch(next);
 //Test Routes
@@ -33,4 +35,15 @@ router.delete('/aulaQuestao/deleteAll', asyncHandler(Controllers_4.AulaQuestaoCo
 router.get('/aulaAluno/get', asyncHandler(Controllers_5.AulaAlunoController.get));
 router.post('/aulaAluno/post', asyncHandler(Controllers_5.AulaAlunoController.post));
 router.put('/aulaAluno/put', asyncHandler(Controllers_5.AulaAlunoController.put));
+//Aluno Routes
+router.get('/aluno/getAll', asyncHandler(Controllers_6.AlunoController.getAll));
+router.get('/aluno/get', asyncHandler(Controllers_6.AlunoController.get));
+router.post('/aluno/post', asyncHandler(Controllers_6.AlunoController.post));
+router.put('/aluno/put', asyncHandler(Controllers_6.AlunoController.put));
+router.delete('/aluno/delete', asyncHandler(Controllers_6.AlunoController.delete));
+router.put('/aluno/recalculate', asyncHandler(Controllers_6.AlunoController.recalculate));
+//Aula Aluno Questão Routes
+router.get('/aulaAlunoQuestao/getAll', asyncHandler(Controllers_7.AulaAlunoQuestaoController.getAll));
+router.post('/aulaAlunoQuestao/post', asyncHandler(Controllers_7.AulaAlunoQuestaoController.post));
+router.put('/aulaAlunoQuestao/put', asyncHandler(Controllers_7.AulaAlunoQuestaoController.put));
 exports.default = router;

@@ -11,7 +11,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const __1 = require("../../..");
 class AulaQuestao {
-    constructor(id, id_aula, id_parte, tx_descricao, tx_alternativas, id_resposta, tx_tipo) {
+    constructor(id, id_aula, id_parte, tx_descricao, tx_alternativas, id_resposta) {
         this.id = id;
         this.id_aula = id_aula;
         this.id_parte = id_parte;
@@ -19,7 +19,6 @@ class AulaQuestao {
         ;
         this.tx_alternativas = tx_alternativas;
         this.id_resposta = id_resposta;
-        this.tx_tipo = tx_tipo;
     }
     //buscas questoes da aula
     static getAll(id_aula) {
@@ -51,15 +50,15 @@ class AulaQuestao {
         });
     }
     //criar questao da aula
-    static post(id_aula, id_parte, tx_descricao, tx_alternativas, id_resposta, tx_tipo) {
+    static post(id_aula, id_parte, tx_descricao, tx_alternativas, id_resposta) {
         return __awaiter(this, void 0, void 0, function* () {
             var _a;
             try {
                 const sql_inset = `
-            INSERT INTO tb_aula_questao (id_aula, id_parte, tx_descricao, tx_alternativas, id_resposta, tx_tipo)
+            INSERT INTO tb_aula_questao (id_aula, id_parte, tx_descricao, tx_alternativas, id_resposta)
             VALUES (?, ?, ?, ?, ?, ?);
             `;
-                const response = yield __1.db.run(sql_inset, [id_aula, id_parte, tx_descricao, tx_alternativas, id_resposta, tx_tipo]);
+                const response = yield __1.db.run(sql_inset, [id_aula, id_parte, tx_descricao, tx_alternativas, id_resposta]);
                 if (response === null || response === void 0 ? void 0 : response.lastID) {
                     return {
                         success: true,
@@ -83,16 +82,16 @@ class AulaQuestao {
         });
     }
     //atualizar questao da aula
-    static put(id, id_aula, id_parte, tx_descricao, tx_alternativas, id_resposta, tx_tipo) {
+    static put(id, id_aula, id_parte, tx_descricao, tx_alternativas, id_resposta) {
         return __awaiter(this, void 0, void 0, function* () {
             var _a;
             try {
                 const sql_update = `
             UPDATE tb_aula_questao 
-            SET id_parte = ?, tx_descricao = ?, tx_alternativas = ?, id_resposta = ?, tx_tipo = ?
+            SET id_parte = ?, tx_descricao = ?, tx_alternativas = ?, id_resposta = ?
             WHERE id_aula = ? AND id = ?
             `;
-                const response = yield __1.db.run(sql_update, [id_parte, tx_descricao, tx_alternativas, id_resposta, tx_tipo, id_aula, id]);
+                const response = yield __1.db.run(sql_update, [id_parte, tx_descricao, tx_alternativas, id_resposta, id_aula, id]);
                 if (response) {
                     return {
                         success: true,

@@ -27,6 +27,7 @@ CREATE TABLE IF NOT EXISTS tb_aula_questao (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     id_aula INTEGER NOT NULL,
     id_parte INTEGER NOT NULL,
+    tx_descricao TEXT NOT NULL,
     tx_alternativas VARCHAR(225) NOT NULL,
     id_resposta INTEGER NOT NULL,
     tx_tipo VARCHAR(225) NOT NULL,

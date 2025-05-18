@@ -9,7 +9,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-class AulaAlunoModel {
+const __1 = require("../../..");
+class AulaAluno {
     constructor(id_aluno, id_aula, lo_finalizado, nu_acertos, nu_erros) {
         this.id_aluno = id_aluno;
         this.id_aula = id_aula;
@@ -20,26 +21,90 @@ class AulaAlunoModel {
     //buscar aula aluno
     static get(id_aluno, id_aula) {
         return __awaiter(this, void 0, void 0, function* () {
-            return {};
+            var _a;
+            try {
+                const sql_search = `
+            SELECT * FROM tb_aula_aluno WHERE id_aluno = ? AND id_aula = ?;
+            `;
+                const response = yield __1.db.all(sql_search, [id_aluno, id_aula]);
+                if (response && response.length) {
+                    return {
+                        success: true,
+                        message: 'Aula do aluno encontrada com sucesso.',
+                        data: response[0]
+                    };
+                }
+                else {
+                    throw new Error("Aula do aluno não encontrada.");
+                }
+            }
+            catch (error) {
+                console.error(error);
+                return {
+                    success: false,
+                    message: (_a = error === null || error === void 0 ? void 0 : error.message) !== null && _a !== void 0 ? _a : "Erro ao buscar aula do aluno."
+                };
+            }
         });
     }
     //criar aula aluno
-    static post(id_aluno, id_aula, lo_finalizado, nu_acertos, nu_erros) {
+    static post(id_aluno, id_aula) {
         return __awaiter(this, void 0, void 0, function* () {
-            return {};
+            var _a;
+            try {
+                const sql_insert = `
+            INSERT INTO tb_aula_aluno (id_aluno, id_aula)
+            VALUES (?, ?);
+            `;
+                const response = yield __1.db.run(sql_insert, [id_aluno, id_aula]);
+                if (response) {
+                    return {
+                        success: true,
+                        message: 'Aula do aluno criada com sucesso'
+                    };
+                }
+                else {
+                    throw new Error("Erro ao tentar criar aula do aluno.");
+                }
+            }
+            catch (error) {
+                console.error(error);
+                return {
+                    success: false,
+                    message: (_a = error === null || error === void 0 ? void 0 : error.message) !== null && _a !== void 0 ? _a : "Erro ao tentar criar aula do aluno."
+                };
+            }
         });
     }
     //atualizar aula aluno
     static put(id_aluno, id_aula, lo_finalizado, nu_acertos, nu_erros) {
         return __awaiter(this, void 0, void 0, function* () {
-            return {};
-        });
-    }
-    //deletar aulas aluno
-    static deleteAll(id_aula, id_aluno) {
-        return __awaiter(this, void 0, void 0, function* () {
-            return {};
+            var _a;
+            try {
+                const sql_update = `
+            UPDATE tb_aula_aluno
+                SET lo_finalizado = ?, nu_acertos = ?, nu_erros = ?
+                WHERE id_aluno = ? AND id_aula = ?;
+            `;
+                const response = yield __1.db.run(sql_update, [lo_finalizado, nu_acertos, nu_erros, id_aluno, id_aula]);
+                if (response) {
+                    return {
+                        success: true,
+                        message: 'Aula do aluno editada com sucesso.'
+                    };
+                }
+                else {
+                    throw new Error('Erro ao tentar editar aula do aluno.');
+                }
+            }
+            catch (error) {
+                console.error(error);
+                return {
+                    success: false,
+                    message: (_a = error === null || error === void 0 ? void 0 : error.message) !== null && _a !== void 0 ? _a : "Erro ao tentar editar aula do aluno."
+                };
+            }
         });
     }
 }
-exports.default = AulaAlunoModel;
+exports.default = AulaAluno;

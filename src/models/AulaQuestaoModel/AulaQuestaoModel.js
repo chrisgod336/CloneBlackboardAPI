@@ -9,44 +9,166 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-class AulaQuestaoModel {
-    constructor(id, id_aula, id_parte, tx_alternativas, id_resposta, tx_tipo) {
+const __1 = require("../../..");
+class AulaQuestao {
+    constructor(id, id_aula, id_parte, tx_descricao, tx_alternativas, id_resposta, tx_tipo) {
         this.id = id;
         this.id_aula = id_aula;
         this.id_parte = id_parte;
+        this.tx_descricao = tx_descricao;
+        ;
         this.tx_alternativas = tx_alternativas;
         this.id_resposta = id_resposta;
         this.tx_tipo = tx_tipo;
     }
     //buscas questoes da aula
-    static get(id_aula) {
+    static getAll(id_aula) {
         return __awaiter(this, void 0, void 0, function* () {
-            return {};
+            var _a;
+            try {
+                const sql_search = `
+            SELECT * FROM tb_aula_questao WHERE id_aula = ? ORDER BY id;
+            `;
+                const response = yield __1.db.all(sql_search, [id_aula]);
+                if (response) {
+                    return {
+                        success: true,
+                        message: 'Questões da aula encontradas com sucesso.',
+                        data: response
+                    };
+                }
+                else {
+                    throw new Error('Erro ao tentar buscar questões da aula.');
+                }
+            }
+            catch (error) {
+                console.error(error);
+                return {
+                    success: false,
+                    message: (_a = error === null || error === void 0 ? void 0 : error.message) !== null && _a !== void 0 ? _a : "Erro ao tentar buscar questões da aula."
+                };
+            }
         });
     }
     //criar questao da aula
-    static post(id_aula, id_parte, tx_alternativas, id_resposta, tx_tipo) {
+    static post(id_aula, id_parte, tx_descricao, tx_alternativas, id_resposta, tx_tipo) {
         return __awaiter(this, void 0, void 0, function* () {
-            return {};
+            var _a;
+            try {
+                const sql_inset = `
+            INSERT INTO tb_aula_questao (id_aula, id_parte, tx_descricao, tx_alternativas, id_resposta, tx_tipo)
+            VALUES (?, ?, ?, ?, ?, ?);
+            `;
+                const response = yield __1.db.run(sql_inset, [id_aula, id_parte, tx_descricao, tx_alternativas, id_resposta, tx_tipo]);
+                if (response === null || response === void 0 ? void 0 : response.lastID) {
+                    return {
+                        success: true,
+                        message: 'Questão da aula criada com sucesso.',
+                        data: {
+                            id: response.lastID
+                        }
+                    };
+                }
+                else {
+                    throw new Error('Erro ao tentar criar questão da aula.');
+                }
+            }
+            catch (error) {
+                console.error(error);
+                return {
+                    success: false,
+                    message: (_a = error === null || error === void 0 ? void 0 : error.message) !== null && _a !== void 0 ? _a : "Erro ao tentar criar questão da aula."
+                };
+            }
         });
     }
     //atualizar questao da aula
-    static put(id, id_aula, id_parte, tx_alternativas, id_resposta, tx_tipo) {
+    static put(id, id_aula, id_parte, tx_descricao, tx_alternativas, id_resposta, tx_tipo) {
         return __awaiter(this, void 0, void 0, function* () {
-            return {};
+            var _a;
+            try {
+                const sql_update = `
+            UPDATE tb_aula_questao 
+            SET id_parte = ?, tx_descricao = ?, tx_alternativas = ?, id_resposta = ?, tx_tipo = ?
+            WHERE id_aula = ? AND id = ?
+            `;
+                const response = yield __1.db.run(sql_update, [id_parte, tx_descricao, tx_alternativas, id_resposta, tx_tipo, id_aula, id]);
+                if (response) {
+                    return {
+                        success: true,
+                        message: 'Questão da aula atualizada com sucesso.'
+                    };
+                }
+                else {
+                    throw new Error('Erro ao tentar atualizar questão da aula.');
+                }
+            }
+            catch (error) {
+                console.error(error);
+                return {
+                    success: false,
+                    message: (_a = error === null || error === void 0 ? void 0 : error.message) !== null && _a !== void 0 ? _a : "Erro ao tentar editar questão da aula."
+                };
+            }
         });
     }
     //deletar questao da aula
     static delete(id, id_aula) {
         return __awaiter(this, void 0, void 0, function* () {
-            return {};
+            var _a;
+            try {
+                const sql_delete = `
+            DELETE FROM tb_aula_questao
+            WHERE id=? AND id_aula = ?
+            `;
+                const response = yield __1.db.run(sql_delete, [id, id_aula]);
+                if (response) {
+                    return {
+                        success: true,
+                        message: 'Questão da aula deletada com sucesso.'
+                    };
+                }
+                else {
+                    throw new Error('Erro ao tentar deletar questão da aula.');
+                }
+            }
+            catch (error) {
+                console.error(error);
+                return {
+                    success: false,
+                    message: (_a = error === null || error === void 0 ? void 0 : error.message) !== null && _a !== void 0 ? _a : "Erro ao tentar deletar questão da aula."
+                };
+            }
         });
     }
     //deletar questoes da aula
     static deleteAll(id_aula) {
         return __awaiter(this, void 0, void 0, function* () {
-            return {};
+            var _a;
+            try {
+                const sql_delete = `
+            DELETE FROM tb_aula_questao
+            WHERE id_aula = ?
+            `;
+                const response = yield __1.db.run(sql_delete, [id_aula]);
+                if (response) {
+                    return {
+                        success: true,
+                        message: 'Questões da aula deletadas com sucesso.'
+                    };
+                }
+                else {
+                    throw new Error('Erro ao tentar deletar questões da aula.');
+                }
+            }
+            catch (error) {
+                console.error(error);
+                return {
+                    success: false,
+                    message: (_a = error === null || error === void 0 ? void 0 : error.message) !== null && _a !== void 0 ? _a : "Erro ao tentar deletar questões da aula."
+                };
+            }
         });
     }
 }
-exports.default = AulaQuestaoModel;
+exports.default = AulaQuestao;

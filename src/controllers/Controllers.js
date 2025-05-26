@@ -8,6 +8,17 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __rest = (this && this.__rest) || function (s, e) {
+    var t = {};
+    for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0)
+        t[p] = s[p];
+    if (s != null && typeof Object.getOwnPropertySymbols === "function")
+        for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) {
+            if (e.indexOf(p[i]) < 0 && Object.prototype.propertyIsEnumerable.call(s, p[i]))
+                t[p[i]] = s[p[i]];
+        }
+    return t;
+};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
@@ -34,6 +45,13 @@ class AulaContorller {
     static getAll(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const response = yield AulaModel_1.default.getAll();
+            return res.status(200).json(response);
+        });
+    }
+    static get(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const { id } = req.query;
+            const response = yield AulaModel_1.default.get(Number(id));
             return res.status(200).json(response);
         });
     }
@@ -147,6 +165,13 @@ class AulaAlunoController {
 }
 exports.AulaAlunoController = AulaAlunoController;
 class AlunoController {
+    static login(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const { tx_login, tx_senha } = req.query;
+            const response = yield AlunoModel_1.default.login(tx_login, tx_senha);
+            return res.status(200).json(response);
+        });
+    }
     static getAll(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const response = yield AlunoModel_1.default.getAll();
@@ -162,16 +187,39 @@ class AlunoController {
     }
     static post(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const { tx_login, tx_nome } = req.body;
-            const response = yield AlunoModel_1.default.post(tx_login, tx_nome);
+            const { tx_nome, tx_login } = req.body;
+            const response = yield AlunoModel_1.default.post(tx_nome, tx_login);
             return res.status(200).json(response);
         });
     }
     static put(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const { id, tx_login, tx_nome, tx_nivel, nu_acertos_texto, nu_erros_texto, nu_acertos_imagem, nu_erros_imagem, nu_acertos_video, nu_erros_video } = req.body;
-            const response = yield AlunoModel_1.default.put(id, tx_login, tx_nome, tx_nivel, nu_acertos_texto, nu_erros_texto, nu_acertos_imagem, nu_erros_imagem, nu_acertos_video, nu_erros_video);
-            return res.status(200).json(response);
+            try {
+                const _a = req.body, { id } = _a, updateData = __rest(_a, ["id"]);
+                if (!id) {
+                    return res.status(400).json({
+                        success: false,
+                        message: 'O ID do aluno é obrigatório.'
+                    });
+                }
+                const filteredUpdateData = Object.fromEntries(Object.entries(updateData).filter(([_, value]) => value !== undefined && value !== null));
+                if (Object.keys(filteredUpdateData).length === 0) {
+                    return res.status(400).json({
+                        success: false,
+                        message: 'Nenhum campo válido fornecido para atualização.'
+                    });
+                }
+                const response = yield AlunoModel_1.default.put(id, filteredUpdateData);
+                const statusCode = response.success ? 200 : 400;
+                return res.status(statusCode).json(response);
+            }
+            catch (error) {
+                console.error('Erro no controller:', error);
+                return res.status(500).json({
+                    success: false,
+                    message: 'Erro interno no servidor ao atualizar aluno.'
+                });
+            }
         });
     }
     static delete(req, res) {

@@ -23,6 +23,7 @@ router.get('/admin/get', asyncHandler(AdminController.get));
 
 //Aula Routes
 router.get('/aula/getAll', asyncHandler(AulaContorller.getAll));
+router.get('/aula/get', asyncHandler(AulaContorller.get));
 router.post('/aula/post', asyncHandler(AulaContorller.post));
 router.put('/aula/put', asyncHandler(AulaContorller.put));
 router.delete('/aula/delete', asyncHandler(AulaContorller.delete));
@@ -45,6 +46,7 @@ router.post('/aulaAluno/post', asyncHandler(AulaAlunoController.post));
 router.put('/aulaAluno/put', asyncHandler(AulaAlunoController.put));
 
 //Aluno Routes
+router.get('/aluno/login', asyncHandler(AlunoController.login));
 router.get('/aluno/getAll', asyncHandler(AlunoController.getAll));
 router.get('/aluno/get', asyncHandler(AlunoController.get));
 router.post('/aluno/post', asyncHandler(AlunoController.post));

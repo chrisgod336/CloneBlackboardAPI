@@ -22,18 +22,19 @@ class Admin {
             var _a, _b, _c;
             try {
                 const sql_search = `
-            SELECT COUNT(*) AS count
+            SELECT id
                 FROM tb_admin 
                 WHERE tx_login = ? 
-                AND tx_senha = ?;
+                AND tx_senha = ?
+                LIMIT 1;
             `;
                 const response = yield __1.db.all(sql_search, [tx_login, tx_senha]);
-                if (((_a = response[0]) === null || _a === void 0 ? void 0 : _a.count) && ((_b = response[0]) === null || _b === void 0 ? void 0 : _b.count) > 0) {
+                if (((_a = response[0]) === null || _a === void 0 ? void 0 : _a.id) && ((_b = response[0]) === null || _b === void 0 ? void 0 : _b.id) > 0) {
                     return {
                         success: true,
                         message: "Administrador encontrado",
                         data: {
-                            tx_login: tx_login
+                            id: response[0].id,
                         }
                     };
                 }

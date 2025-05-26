@@ -24,6 +24,36 @@ class Aluno {
         this.nu_acertos_video = nu_acertos_video;
         this.nu_erros_video = nu_erros_video;
     }
+    //login do aluno
+    static login(tx_login, tx_senha) {
+        return __awaiter(this, void 0, void 0, function* () {
+            var _a, _b, _c, _d, _e;
+            try {
+                const sql_search = `SELECT id FROM tb_aluno WHERE tx_login = ? AND tx_senha = ? LIMIT 1`;
+                const response = yield __1.db.all(sql_search, [tx_login, tx_senha]);
+                if (response.length > 0 && ((_a = response[0]) === null || _a === void 0 ? void 0 : _a.id) && ((_b = response[0]) === null || _b === void 0 ? void 0 : _b.id) > 0) {
+                    const id = (_c = response[0]) === null || _c === void 0 ? void 0 : _c.id;
+                    const obj = yield this.get(id);
+                    if (obj === null || obj === void 0 ? void 0 : obj.success) {
+                        return obj;
+                    }
+                    else {
+                        return { success: false, message: (_d = obj === null || obj === void 0 ? void 0 : obj.message) !== null && _d !== void 0 ? _d : "Erro ao buscar aluno" };
+                    }
+                }
+                else {
+                    return { status: false, mensagem: "Login ou senha inválidos" };
+                }
+            }
+            catch (error) {
+                console.error(error);
+                return {
+                    success: false,
+                    message: (_e = error === null || error === void 0 ? void 0 : error.message) !== null && _e !== void 0 ? _e : "Erro ao tentar logar com aluno."
+                };
+            }
+        });
+    }
     //buscar dados do aluno
     static get(id) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -31,11 +61,13 @@ class Aluno {
             try {
                 const sql_search = `SELECT * FROM tb_aluno WHERE id = ?`;
                 const response = yield __1.db.all(sql_search, [id]);
+                //##AGENTE GESTOR##//
+                const feedback = 'O aluno está tendo um bom desempenho de aprendizando com textos e imagens, porém vem apresentando défities de aprendizados com vídeos. Mesmo assim o aluno está acima da média e apresenta um bom desempenho geral.';
                 if (response && response.length) {
                     return {
                         success: true,
                         message: 'Aluno encontrado com sucesso.',
-                        data: response[0]
+                        data: Object.assign(Object.assign({}, response[0]), { feedback: feedback })
                     };
                 }
                 else {
@@ -106,19 +138,34 @@ class Aluno {
         });
     }
     //atualizar aluno
-    static put(id, tx_nome, tx_login, tx_nivel, nu_acertos_texto, nu_erros_texto, nu_acertos_imagem, nu_erros_imagem, nu_acertos_video, nu_erros_video) {
+    static put(id, updateData) {
         return __awaiter(this, void 0, void 0, function* () {
             var _a;
             try {
+                const fieldsToUpdate = [];
+                const values = [];
+                Object.entries(updateData).forEach(([key, value]) => {
+                    if (value !== undefined && value !== null) {
+                        fieldsToUpdate.push(`${key} = ?`);
+                        values.push(value);
+                    }
+                });
+                if (fieldsToUpdate.length === 0) {
+                    return {
+                        success: false,
+                        message: 'Nenhum campo fornecido para atualização.'
+                    };
+                }
                 const sql_update = `
-            UPDATE tb_aluno 
-            SET tx_nome = ?, tx_login = ?, tx_nivel = ?, nu_acertos_texto = ?, nu_erros_texto = ?, nu_acertos_imagem = ?, nu_erros_imagem = ?, nu_acertos_video = ?, nu_erros_video = ? 
-            WHERE id = ?`;
-                const response = yield __1.db.run(sql_update, [tx_nome, tx_login, tx_nivel, nu_acertos_texto, nu_erros_texto, nu_acertos_imagem, nu_erros_imagem, nu_acertos_video, nu_erros_video, id]);
+                UPDATE tb_aluno 
+                SET ${fieldsToUpdate.join(', ')}
+                WHERE id = ?`;
+                values.push(id);
+                const response = yield __1.db.run(sql_update, values);
                 if (response) {
                     return {
                         success: true,
-                        message: 'Aluno editado com sucesso.',
+                        message: 'Aluno atualizado com sucesso.',
                     };
                 }
                 else {
@@ -148,7 +195,7 @@ class Aluno {
                     yield __1.db.run(query, [id]);
                 }
                 return {
-                    sucess: true,
+                    success: true,
                     message: 'Aluno deletado com sucesso.',
                 };
             }

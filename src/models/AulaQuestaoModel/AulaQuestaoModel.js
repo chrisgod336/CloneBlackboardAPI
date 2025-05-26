@@ -56,7 +56,7 @@ class AulaQuestao {
             try {
                 const sql_inset = `
             INSERT INTO tb_aula_questao (id_aula, id_parte, tx_descricao, tx_alternativas, id_resposta)
-            VALUES (?, ?, ?, ?, ?, ?);
+            VALUES (?, ?, ?, ?, ?);
             `;
                 const response = yield __1.db.run(sql_inset, [id_aula, id_parte, tx_descricao, tx_alternativas, id_resposta]);
                 if (response === null || response === void 0 ? void 0 : response.lastID) {

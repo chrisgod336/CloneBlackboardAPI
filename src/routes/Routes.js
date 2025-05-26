@@ -18,6 +18,7 @@ router.get("/", (req, res) => {
 router.get('/admin/get', asyncHandler(Controllers_1.AdminController.get));
 //Aula Routes
 router.get('/aula/getAll', asyncHandler(Controllers_2.AulaContorller.getAll));
+router.get('/aula/get', asyncHandler(Controllers_2.AulaContorller.get));
 router.post('/aula/post', asyncHandler(Controllers_2.AulaContorller.post));
 router.put('/aula/put', asyncHandler(Controllers_2.AulaContorller.put));
 router.delete('/aula/delete', asyncHandler(Controllers_2.AulaContorller.delete));
@@ -36,6 +37,7 @@ router.get('/aulaAluno/get', asyncHandler(Controllers_5.AulaAlunoController.get)
 router.post('/aulaAluno/post', asyncHandler(Controllers_5.AulaAlunoController.post));
 router.put('/aulaAluno/put', asyncHandler(Controllers_5.AulaAlunoController.put));
 //Aluno Routes
+router.get('/aluno/login', asyncHandler(Controllers_6.AlunoController.login));
 router.get('/aluno/getAll', asyncHandler(Controllers_6.AlunoController.getAll));
 router.get('/aluno/get', asyncHandler(Controllers_6.AlunoController.get));
 router.post('/aluno/post', asyncHandler(Controllers_6.AlunoController.post));

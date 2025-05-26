@@ -41,6 +41,37 @@ export default class Aula {
         }
     }
 
+    //buscar aula
+    public static async get(id:number): Promise<object>{
+        try {
+
+            const sql_search = `
+            SELECT * 
+                FROM tb_aula
+                WHERE id = ?
+            `;
+
+            const response = await db.all(sql_search, [id]);
+
+            if(response[0]){
+                return {
+                    success: true,
+                    message: 'Aula encontrada com sucesso.',
+                    data: response[0]
+                }
+            }else{
+                throw new Error('Erro ao tentar buscar as aula.');
+            }
+
+        }catch(error:any){
+            console.error(error);
+            return {
+                success: false,
+                message: error?.message??'Error ao tentar buscar aula.'
+            }
+        }
+    }
+
     //criar uma aula
     public static async post(tx_descricao: string): Promise<object>{
         try{

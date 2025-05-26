@@ -50,6 +50,37 @@ class Aula {
             }
         });
     }
+    //buscar aula
+    static get(id) {
+        return __awaiter(this, void 0, void 0, function* () {
+            var _a;
+            try {
+                const sql_search = `
+            SELECT * 
+                FROM tb_aula
+                WHERE id = ?
+            `;
+                const response = yield __1.db.all(sql_search, [id]);
+                if (response[0]) {
+                    return {
+                        success: true,
+                        message: 'Aula encontrada com sucesso.',
+                        data: response[0]
+                    };
+                }
+                else {
+                    throw new Error('Erro ao tentar buscar as aula.');
+                }
+            }
+            catch (error) {
+                console.error(error);
+                return {
+                    success: false,
+                    message: (_a = error === null || error === void 0 ? void 0 : error.message) !== null && _a !== void 0 ? _a : 'Error ao tentar buscar aula.'
+                };
+            }
+        });
+    }
     //criar uma aula
     static post(tx_descricao) {
         return __awaiter(this, void 0, void 0, function* () {

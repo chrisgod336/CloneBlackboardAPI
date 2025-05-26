@@ -17,20 +17,21 @@ export default class Admin{
         try{
 
             const sql_search = `
-            SELECT COUNT(*) AS count
+            SELECT id
                 FROM tb_admin 
                 WHERE tx_login = ? 
-                AND tx_senha = ?;
+                AND tx_senha = ?
+                LIMIT 1;
             `;
 
             const response = await db.all(sql_search, [tx_login, tx_senha]);
 
-            if(response[0]?.count && response[0]?.count > 0){
+            if(response[0]?.id && response[0]?.id > 0){
                 return {
                     success: true,
                     message: "Administrador encontrado",
                     data: {
-                        tx_login: tx_login
+                        id: response[0].id,
                     }
                 }
             }else{

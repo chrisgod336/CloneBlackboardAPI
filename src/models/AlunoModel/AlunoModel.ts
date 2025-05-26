@@ -29,6 +29,35 @@ export default class Aluno {
         this.nu_erros_video = nu_erros_video;
     }
 
+    //login do aluno
+    public static async login(tx_login:string, tx_senha:string):Promise<object> {
+        try{
+
+            const sql_search = `SELECT id FROM tb_aluno WHERE tx_login = ? AND tx_senha = ? LIMIT 1`;
+
+            const response = await db.all(sql_search, [tx_login, tx_senha]);
+
+            if(response.length > 0 &&response[0]?.id && response[0]?.id > 0){
+                const id = response[0]?.id;
+                const obj:any = await this.get(id);
+
+                if(obj?.success){
+                    return obj;
+                }else{
+                    return {success:false, message:obj?.message??"Erro ao buscar aluno"};
+                }
+            }else{
+                return {status: false, mensagem: "Login ou senha inválidos"};
+            }
+
+        }catch(error:any){
+            console.error(error);
+            return {
+                success: false,
+                message: error?.message??"Erro ao tentar logar com aluno."
+            }
+        }
+    }
 
     //buscar dados do aluno
     public static async get(id:number): Promise<object> {
@@ -38,11 +67,14 @@ export default class Aluno {
 
             const response = await db.all(sql_search, [id]);
 
+            //##AGENTE GESTOR##//
+            const feedback =  'O aluno está tendo um bom desempenho de aprendizando com textos e imagens, porém vem apresentando défities de aprendizados com vídeos. Mesmo assim o aluno está acima da média e apresenta um bom desempenho geral.';
+
             if(response && response.length){
                 return {
                     success: true,
                     message: 'Aluno encontrado com sucesso.',
-                    data: response[0]
+                    data: {...response[0], feedback: feedback}
                 }
             }else{
                 throw new Error('Erro ao tentar buscar dados do aluno.');
@@ -112,32 +144,63 @@ export default class Aluno {
     }
 
     //atualizar aluno
-    public static async put(id:number, tx_nome:string, tx_login:string, tx_nivel:string, nu_acertos_texto:number,nu_erros_texto:number, nu_acertos_imagem:number,nu_erros_imagem:number, 
-        nu_acertos_video:number,nu_erros_video:number): Promise<object>{
-        try{
+    public static async put(
+        id: number,
+        updateData: {
+            tx_nome?: string;
+            tx_login?: string;
+            tx_nivel?: string;
+            nu_acertos_texto?: number;
+            nu_erros_texto?: number;
+            nu_acertos_imagem?: number;
+            nu_erros_imagem?: number;
+            nu_acertos_video?: number;
+            nu_erros_video?: number;
+        }
+    ): Promise<object> {
+        try {
+
+            const fieldsToUpdate: string[] = [];
+            const values: any[] = [];
+
+            Object.entries(updateData).forEach(([key, value]) => {
+                if (value !== undefined && value !== null) {
+                    fieldsToUpdate.push(`${key} = ?`);
+                    values.push(value);
+                }
+            });
+
+            if (fieldsToUpdate.length === 0) {
+                return {
+                    success: false,
+                    message: 'Nenhum campo fornecido para atualização.'
+                };
+            }
 
             const sql_update = `
-            UPDATE tb_aluno 
-            SET tx_nome = ?, tx_login = ?, tx_nivel = ?, nu_acertos_texto = ?, nu_erros_texto = ?, nu_acertos_imagem = ?, nu_erros_imagem = ?, nu_acertos_video = ?, nu_erros_video = ? 
-            WHERE id = ?`;
+                UPDATE tb_aluno 
+                SET ${fieldsToUpdate.join(', ')}
+                WHERE id = ?`;
 
-            const response = await db.run(sql_update, [tx_nome, tx_login, tx_nivel, nu_acertos_texto, nu_erros_texto, nu_acertos_imagem, nu_erros_imagem, nu_acertos_video, nu_erros_video, id]);
+            values.push(id);
 
-            if(response){
+            const response = await db.run(sql_update, values);
+
+            if (response) {
                 return {
                     success: true,
-                    message: 'Aluno editado com sucesso.',
-                }
-            }else{
+                    message: 'Aluno atualizado com sucesso.',
+                };
+            } else {
                 throw new Error('Erro ao tentar editar aluno.');
             }
 
-        }catch(error:any){
+        } catch (error: any) {
             console.error(error);
-            return{
+            return {
                 success: false,
-                message: error?.message??'Erro ao tentar editar aluno.'
-            }
+                message: error?.message ?? 'Erro ao tentar editar aluno.'
+            };
         }
     }
 
@@ -156,7 +219,7 @@ export default class Aluno {
             }
 
             return {
-                sucess: true,
+                success: true,
                 message: 'Aluno deletado com sucesso.',
             }
 

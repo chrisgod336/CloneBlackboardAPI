@@ -21,6 +21,12 @@ export class AulaContorller {
         return res.status(200).json(response);
     }
 
+    public static async get(req:Request, res:Response){
+        const { id } = req.query as { id: string };
+        const response = await Aula.get(Number(id));
+        return res.status(200).json(response);
+    }
+
     public static async post(req:Request, res:Response) {
         const { tx_descricao } = req.body as { tx_descricao: string };
         const response = await Aula.post(tx_descricao);
@@ -116,6 +122,13 @@ export class AulaAlunoController {
 }
 
 export class AlunoController {
+
+    public static async login(req:Request, res:Response){
+        const { tx_login, tx_senha } = req.query as { tx_login: string, tx_senha: string };
+        const response = await Aluno.login(tx_login, tx_senha);
+        return res.status(200).json(response);
+    }
+
     public static async getAll(req:Request, res:Response) {
         const response = await Aluno.getAll();
         return res.status(200).json(response);
@@ -128,16 +141,56 @@ export class AlunoController {
     }
 
     public static async post(req:Request, res:Response) {
-        const { tx_login, tx_nome } = req.body as { tx_login: string, tx_nome: string };
-        const response = await Aluno.post(tx_login, tx_nome);
+        const { tx_nome, tx_login } = req.body as { tx_nome: string, tx_login: string };
+        const response = await Aluno.post(tx_nome, tx_login);
         return res.status(200).json(response);
     }
 
-    public static async put(req:Request, res:Response) {
-        const { id, tx_login, tx_nome, tx_nivel, nu_acertos_texto,nu_erros_texto, nu_acertos_imagem,nu_erros_imagem, nu_acertos_video,nu_erros_video } = req.body as { id: number, tx_login: string, tx_nome: string, 
-            tx_nivel: string, nu_acertos_texto:number,nu_erros_texto:number, nu_acertos_imagem:number, nu_erros_imagem:number, nu_acertos_video:number,nu_erros_video:number };
-        const response = await Aluno.put(id, tx_login, tx_nome, tx_nivel, nu_acertos_texto, nu_erros_texto, nu_acertos_imagem,nu_erros_imagem, nu_acertos_video, nu_erros_video);
-        return res.status(200).json(response);
+    public static async put(req: Request, res: Response) {
+        try {
+            const { id, ...updateData } = req.body as {
+                id: number;
+                tx_login?: string;
+                tx_nome?: string;
+                tx_nivel?: string;
+                nu_acertos_texto?: number;
+                nu_erros_texto?: number;
+                nu_acertos_imagem?: number;
+                nu_erros_imagem?: number;
+                nu_acertos_video?: number;
+                nu_erros_video?: number;
+            };
+
+            if (!id) {
+                return res.status(400).json({
+                    success: false,
+                    message: 'O ID do aluno é obrigatório.'
+                });
+            }
+
+            const filteredUpdateData = Object.fromEntries(
+                Object.entries(updateData).filter(([_, value]) => value !== undefined && value !== null)
+            );
+
+            if (Object.keys(filteredUpdateData).length === 0) {
+                return res.status(400).json({
+                    success: false,
+                    message: 'Nenhum campo válido fornecido para atualização.'
+                });
+            }
+
+            const response:any = await Aluno.put(id, filteredUpdateData);
+            
+            const statusCode = response.success ? 200 : 400;
+            return res.status(statusCode).json(response);
+
+        } catch (error: any) {
+            console.error('Erro no controller:', error);
+            return res.status(500).json({
+                success: false,
+                message: 'Erro interno no servidor ao atualizar aluno.'
+            });
+        }
     }
 
     public static async delete(req:Request, res:Response) {

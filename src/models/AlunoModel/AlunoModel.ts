@@ -47,7 +47,7 @@ export default class Aluno {
                     return {success:false, message:obj?.message??"Erro ao buscar aluno"};
                 }
             }else{
-                return {status: false, mensagem: "Login ou senha inválidos"};
+                return {success: false, mensagem: "Login ou senha inválidos"};
             }
 
         }catch(error:any){

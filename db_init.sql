@@ -1,3 +1,8 @@
+-- DROP TABLE tb_aula_aluno_questao;
+-- DROP TABLE tb_aula_aluno;
+-- DROP TABLE tb_aula_parte;
+-- DROP TABLE tb_aula_questao;
+
 -- Tabela de administradores
 CREATE TABLE IF NOT EXISTS tb_admin (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -13,12 +18,12 @@ CREATE TABLE IF NOT EXISTS tb_aula (
 
 -- Tabela de partes da aula
 CREATE TABLE IF NOT EXISTS tb_aula_parte (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    id INTEGER NOT NULL,
     id_aula INTEGER NOT NULL,
     tx_descricao VARCHAR(225) NOT NULL,
     tx_texto TEXT NOT NULL ,
-    tx_dir_imagem VARCHAR(225) NOT NULL,
-    tx_url_video VARCHAR(225) NOT NULL,
+    tx_dir_imagem TEXT NOT NULL,
+    tx_url_video TEXT NOT NULL,
     FOREIGN KEY (id_aula) REFERENCES tb_aula(id)
 );
 
@@ -56,7 +61,6 @@ CREATE TABLE IF NOT EXISTS tb_aula_aluno (
     lo_finalizado CHAR(1) DEFAULT 'N',
     nu_acertos INTEGER DEFAULT 0,
     nu_erros INTEGER DEFAULT 0,
-    PRIMARY KEY (id_aluno, id_aula),
     FOREIGN KEY (id_aluno) REFERENCES tb_aluno(id),
     FOREIGN KEY (id_aula) REFERENCES tb_aula(id)
 );
@@ -69,8 +73,9 @@ CREATE TABLE IF NOT EXISTS tb_aula_aluno_questao (
     id_resposta_aluno INTEGER NOT NULL,
     lo_acerto CHAR(1) DEFAULT 'N',
     tx_tipo VARCHAR(225) NOT NULL,
-    PRIMARY KEY (id_aluno, id_aula, id_questao),
     FOREIGN KEY (id_aluno) REFERENCES tb_aluno(id),
     FOREIGN KEY (id_aula) REFERENCES tb_aula(id),
     FOREIGN KEY (id_questao) REFERENCES tb_aula_questao(id)
 );
+
+

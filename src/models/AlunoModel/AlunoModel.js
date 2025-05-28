@@ -42,7 +42,7 @@ class Aluno {
                     }
                 }
                 else {
-                    return { status: false, mensagem: "Login ou senha inválidos" };
+                    return { success: false, mensagem: "Login ou senha inválidos" };
                 }
             }
             catch (error) {

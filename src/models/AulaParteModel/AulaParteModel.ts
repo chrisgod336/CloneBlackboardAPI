@@ -31,13 +31,13 @@ export default class AulaParte {
 
             if(response && response.length){
                 return {
-                    status: true,
+                    success: true,
                     message: 'Partes da aula encontradas com sucesso.',
                     data: response
                 }
             }else{
                 return {
-                    status: false,
+                    success: false,
                     message: 'Nenhuma parte da aula encontrada.',
                 }
             }

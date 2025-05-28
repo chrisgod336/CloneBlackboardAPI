@@ -22,7 +22,7 @@ export default class AulaQuestao {
         try{
 
             const sql_search = `
-            SELECT * FROM tb_aula_questao WHERE id_aula = ? ORDER BY id;
+            SELECT * FROM tb_aula_questao WHERE id_aula = ? ORDER BY id_parte, id;
             `;
 
             const response = await db.all(sql_search, [id_aula]);

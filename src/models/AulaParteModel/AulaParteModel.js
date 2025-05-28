@@ -32,14 +32,14 @@ class AulaParte {
                 const response = yield __1.db.all(sql_search, [id_aula]);
                 if (response && response.length) {
                     return {
-                        status: true,
+                        success: true,
                         message: 'Partes da aula encontradas com sucesso.',
                         data: response
                     };
                 }
                 else {
                     return {
-                        status: false,
+                        success: false,
                         message: 'Nenhuma parte da aula encontrada.',
                     };
                 }

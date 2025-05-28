@@ -26,7 +26,7 @@ class AulaQuestao {
             var _a;
             try {
                 const sql_search = `
-            SELECT * FROM tb_aula_questao WHERE id_aula = ? ORDER BY id;
+            SELECT * FROM tb_aula_questao WHERE id_aula = ? ORDER BY id_parte, id;
             `;
                 const response = yield __1.db.all(sql_search, [id_aula]);
                 if (response) {

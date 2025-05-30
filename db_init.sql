@@ -61,6 +61,9 @@ CREATE TABLE IF NOT EXISTS tb_aula_aluno (
     lo_finalizado CHAR(1) DEFAULT 'N',
     nu_acertos INTEGER DEFAULT 0,
     nu_erros INTEGER DEFAULT 0,
+    tx_parte1 VARCHAR(255),
+    tx_parte2 VARCHAR(255),
+    tx_parte3 VARCHAR(255),
     FOREIGN KEY (id_aluno) REFERENCES tb_aluno(id),
     FOREIGN KEY (id_aula) REFERENCES tb_aula(id)
 );

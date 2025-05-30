@@ -109,14 +109,22 @@ export class AulaAlunoController {
     }
 
     public static async post(req:Request, res:Response) {
-        const { id_aluno, id_aula } = req.body as { id_aluno: number, id_aula: number, lo_finalizado:string, nu_acertos:number, nu_erros:number };
-        const response = await AulaAluno.post(id_aluno, id_aula);
+        const { id_aluno, id_aula, lo_finalizado, nu_acertos, nu_erros, tx_parte1, tx_parte2, tx_parte3 } = 
+        req.body as { id_aluno: number, id_aula: number, lo_finalizado:string, nu_acertos:number, nu_erros:number, tx_parte1:string, tx_parte2:string, tx_parte3:string};
+        const response = await AulaAluno.post(id_aluno, id_aula, lo_finalizado, nu_acertos, nu_erros, tx_parte1, tx_parte2, tx_parte3);
         return res.status(200).json(response);
      }
 
      public static async put(req:Request, res:Response) {
-        const { id_aluno, id_aula, lo_finalizado, nu_acertos, nu_erros } = req.body as { id_aluno: number, id_aula: number, lo_finalizado:string, nu_acertos:number, nu_erros:number };
-        const response = await AulaAluno.put(id_aluno, id_aula, lo_finalizado, nu_acertos, nu_erros);
+        const { id_aluno, id_aula, lo_finalizado, nu_acertos, nu_erros, tx_parte1, tx_parte2, tx_parte3} = 
+        req.body as { id_aluno: number, id_aula: number, lo_finalizado:string, nu_acertos:number, nu_erros:number, tx_parte1:string, tx_parte2:string, tx_parte3:string };
+        const response = await AulaAluno.put(id_aluno, id_aula, lo_finalizado, nu_acertos, nu_erros, tx_parte1, tx_parte2, tx_parte3);
+        return res.status(200).json(response);
+     }
+
+     public static async make(req:Request, res:Response) {
+        const { id_aluno } = req.query as { id_aluno: string };
+        const response = await AulaAluno.make(Number(id_aluno));
         return res.status(200).json(response);
      }
 }

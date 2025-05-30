@@ -150,15 +150,22 @@ class AulaAlunoController {
     }
     static post(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const { id_aluno, id_aula } = req.body;
-            const response = yield AulaAlunoModel_1.default.post(id_aluno, id_aula);
+            const { id_aluno, id_aula, lo_finalizado, nu_acertos, nu_erros, tx_parte1, tx_parte2, tx_parte3 } = req.body;
+            const response = yield AulaAlunoModel_1.default.post(id_aluno, id_aula, lo_finalizado, nu_acertos, nu_erros, tx_parte1, tx_parte2, tx_parte3);
             return res.status(200).json(response);
         });
     }
     static put(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const { id_aluno, id_aula, lo_finalizado, nu_acertos, nu_erros } = req.body;
-            const response = yield AulaAlunoModel_1.default.put(id_aluno, id_aula, lo_finalizado, nu_acertos, nu_erros);
+            const { id_aluno, id_aula, lo_finalizado, nu_acertos, nu_erros, tx_parte1, tx_parte2, tx_parte3 } = req.body;
+            const response = yield AulaAlunoModel_1.default.put(id_aluno, id_aula, lo_finalizado, nu_acertos, nu_erros, tx_parte1, tx_parte2, tx_parte3);
+            return res.status(200).json(response);
+        });
+    }
+    static make(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const { id_aluno } = req.query;
+            const response = yield AulaAlunoModel_1.default.make(Number(id_aluno));
             return res.status(200).json(response);
         });
     }

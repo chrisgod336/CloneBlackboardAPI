@@ -36,6 +36,7 @@ router.delete('/aulaQuestao/deleteAll', asyncHandler(Controllers_4.AulaQuestaoCo
 router.get('/aulaAluno/get', asyncHandler(Controllers_5.AulaAlunoController.get));
 router.post('/aulaAluno/post', asyncHandler(Controllers_5.AulaAlunoController.post));
 router.put('/aulaAluno/put', asyncHandler(Controllers_5.AulaAlunoController.put));
+router.get('/aulaAluno/make', asyncHandler(Controllers_5.AulaAlunoController.make));
 //Aluno Routes
 router.get('/aluno/login', asyncHandler(Controllers_6.AlunoController.login));
 router.get('/aluno/getAll', asyncHandler(Controllers_6.AlunoController.getAll));

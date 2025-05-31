@@ -207,10 +207,10 @@ export class AlunoController {
         return res.status(200).json(response);
     }
 
-    public static async recalculate(req:Request, res:Response){
-        const response = await Aluno.recalculate();
-        return res.status(200).json(response);
-    }
+    // public static async recalculate(req:Request, res:Response){
+    //     const response = await Aluno.recalculate();
+    //     return res.status(200).json(response);
+    // }
 }
 
 export class AulaAlunoQuestaoController {
@@ -229,6 +229,12 @@ export class AulaAlunoQuestaoController {
     public static async put(req:Request, res:Response){
         const { id_aula, id_aluno, id_questao, id_resposta_aluno, tx_tipo, lo_acerto } = req.body as { id_aula: number, id_aluno:number, id_questao:number, id_resposta_aluno:number, tx_tipo:string, lo_acerto:string};
         const response = await AulaAlunoQuestao.put(id_aula, id_aluno, id_questao, id_resposta_aluno, tx_tipo, lo_acerto);
+        return res.status(200).json(response);
+    }
+
+    public static async deleteAll(req:Request, res:Response) {
+        const { id_aula, id_aluno } = req.query as { id_aula: string, id_aluno: string };
+        const response = await AulaAlunoQuestao.deleteAll(Number(id_aula), Number(id_aluno));
         return res.status(200).json(response);
     }
 }

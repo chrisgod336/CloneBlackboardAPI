@@ -149,18 +149,18 @@ export default class Aula {
                 await db.run(query, [id]);
             }
 
-            const res:any = await Aluno.recalculate();
-            if (res?.success) {
+            // const res:any = await Aluno.recalculate();
+            // if (res?.success) {
                 return {
                     success: true,
                     message: 'Aula deletada com sucesso.'
                 };
-            } else {
-                return {
-                    success: false,
-                    message: 'Aula deletada, mas houve um erro ao recalcular as questões dos alunos.'
-                };
-            }
+            // } else {
+            //     return {
+            //         success: false,
+            //         message: 'Aula deletada, mas houve um erro ao recalcular as questões dos alunos.'
+            //     };
+            // }
 
         } catch (error: any) {
             console.error(error);

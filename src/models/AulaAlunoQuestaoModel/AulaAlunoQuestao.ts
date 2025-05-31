@@ -59,16 +59,16 @@ export default class AulaAlunoQuestao {
 
             if(response){
 
-                const res:any = await Aluno.recalculate();
+                // const res:any = await Aluno.recalculate();
 
-                if(res?.success){
+                // if(res?.success){
                     return {
                         success: true,
                         message: 'Questão do aluno criada com sucesso.'
                     }
-                }else{
-                    throw new Error(res?.message??'Erro ao tentar recalular questões dos alunos.')
-                }
+                // }else{
+                //     throw new Error(res?.message??'Erro ao tentar recalular questões dos alunos.')
+                // }
 
             }else{
                 throw new Error('Erro ao  tentar criar questão do aluno.');
@@ -96,16 +96,16 @@ export default class AulaAlunoQuestao {
 
             if(response){
 
-                const res:any = await Aluno.recalculate();
+                // const res:any = await Aluno.recalculate();
 
-                if(res?.success){
+                // if(res?.success){
                     return {
                         success: true,
                         message: 'Questão do aluno atualizada com sucesso.'
                     }
-                }else{
-                    throw new Error(res?.message??'Erro ao tentar recalular questões dos alunos.')
-                }
+                // }else{
+                //     throw new Error(res?.message??'Erro ao tentar recalular questões dos alunos.')
+                // }
 
             }else{
                 throw new Error('Erro ao tentar atualizar questão do aluno.');
@@ -116,6 +116,42 @@ export default class AulaAlunoQuestao {
             return {
                 success: false,
                 message: error?.message??"Erro ao tentar atualizar questão do aluno."
+            }
+        }
+    }
+
+    //deletar todas as questao aula aluno
+    public static async deleteAll(id_aula:number, id_aluno:number): Promise<object>{
+        try{
+
+            const sql_delte = `
+            DELETE FROM tb_aula_aluno_questao WHERE id_aula = ? AND id_aluno = ?;
+            `;
+
+            const response = await db.run(sql_delte, [id_aula, id_aluno]);
+
+            if(response){
+
+                // const res:any = await Aluno.recalculate();
+
+                // if(res?.success){
+                    return {
+                        success: true,
+                        message: 'Questões do aluno deletadas com sucesso.'
+                    }
+                // }else{
+                //     throw new Error(res?.message??'Erro ao tentar recalular questões dos alunos.')
+                // }
+
+            }else{
+                throw new Error('Erro ao  tentar deletar questões do aluno.');
+            }
+
+        }catch(error:any){
+            console.error(error);
+            return {
+                success: false,
+                message: error?.message??"Erro ao tentar deletar questões do aluno."
             }
         }
     }

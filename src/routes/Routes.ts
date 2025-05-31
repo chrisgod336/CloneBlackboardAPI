@@ -53,11 +53,12 @@ router.get('/aluno/get', asyncHandler(AlunoController.get));
 router.post('/aluno/post', asyncHandler(AlunoController.post));
 router.put('/aluno/put', asyncHandler(AlunoController.put));
 router.delete('/aluno/delete', asyncHandler(AlunoController.delete))
-router.put('/aluno/recalculate', asyncHandler(AlunoController.recalculate));
+//router.put('/aluno/recalculate', asyncHandler(AlunoController.recalculate));
 
 //Aula Aluno Questão Routes
 router.get('/aulaAlunoQuestao/getAll', asyncHandler(AulaAlunoQuestaoController.getAll));
 router.post('/aulaAlunoQuestao/post', asyncHandler(AulaAlunoQuestaoController.post));
 router.put('/aulaAlunoQuestao/put', asyncHandler(AulaAlunoQuestaoController.put));
+router.delete('/aulaAlunoQuestao/deleteAll', asyncHandler(AulaAlunoQuestaoController.deleteAll))
 
 export default router;

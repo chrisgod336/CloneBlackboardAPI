@@ -236,12 +236,6 @@ class AlunoController {
             return res.status(200).json(response);
         });
     }
-    static recalculate(req, res) {
-        return __awaiter(this, void 0, void 0, function* () {
-            const response = yield AlunoModel_1.default.recalculate();
-            return res.status(200).json(response);
-        });
-    }
 }
 exports.AlunoController = AlunoController;
 class AulaAlunoQuestaoController {
@@ -263,6 +257,13 @@ class AulaAlunoQuestaoController {
         return __awaiter(this, void 0, void 0, function* () {
             const { id_aula, id_aluno, id_questao, id_resposta_aluno, tx_tipo, lo_acerto } = req.body;
             const response = yield AulaAlunoQuestao_1.default.put(id_aula, id_aluno, id_questao, id_resposta_aluno, tx_tipo, lo_acerto);
+            return res.status(200).json(response);
+        });
+    }
+    static deleteAll(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const { id_aula, id_aluno } = req.query;
+            const response = yield AulaAlunoQuestao_1.default.deleteAll(Number(id_aula), Number(id_aluno));
             return res.status(200).json(response);
         });
     }

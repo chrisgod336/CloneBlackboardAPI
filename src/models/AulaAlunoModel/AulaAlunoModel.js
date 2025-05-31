@@ -114,6 +114,7 @@ class AulaAluno {
         return __awaiter(this, void 0, void 0, function* () {
             var _a;
             try {
+                //Verifica se a aula ja existe, se já manda para o Avalidar, se não para o tutor
                 /** CHAMADA DO AGENTE TUTOR **/
                 const aula = {
                     tx_parte1: 'texto',

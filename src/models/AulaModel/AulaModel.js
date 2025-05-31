@@ -8,12 +8,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 const __1 = require("../../..");
-const AlunoModel_1 = __importDefault(require("../AlunoModel/AlunoModel"));
 class Aula {
     constructor(id, tx_descricao) {
         this.id = id;
@@ -157,19 +153,18 @@ class Aula {
                 for (const query of queries) {
                     yield __1.db.run(query, [id]);
                 }
-                const res = yield AlunoModel_1.default.recalculate();
-                if (res === null || res === void 0 ? void 0 : res.success) {
-                    return {
-                        success: true,
-                        message: 'Aula deletada com sucesso.'
-                    };
-                }
-                else {
-                    return {
-                        success: false,
-                        message: 'Aula deletada, mas houve um erro ao recalcular as questões dos alunos.'
-                    };
-                }
+                // const res:any = await Aluno.recalculate();
+                // if (res?.success) {
+                return {
+                    success: true,
+                    message: 'Aula deletada com sucesso.'
+                };
+                // } else {
+                //     return {
+                //         success: false,
+                //         message: 'Aula deletada, mas houve um erro ao recalcular as questões dos alunos.'
+                //     };
+                // }
             }
             catch (error) {
                 console.error(error);

@@ -8,12 +8,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 const __1 = require("../../..");
-const AlunoModel_1 = __importDefault(require("../AlunoModel/AlunoModel"));
 class AulaAlunoQuestao {
     constructor(id_aluno, id_aula, id_questao, id_resposta_aluno, tx_tipo, lo_acerto) {
         this.id_aluno = id_aluno;
@@ -54,7 +50,7 @@ class AulaAlunoQuestao {
     //criar questao aula aluno
     static post(id_aula, id_aluno, id_questao, id_resposta_aluno, tx_tipo, lo_acerto) {
         return __awaiter(this, void 0, void 0, function* () {
-            var _a, _b;
+            var _a;
             try {
                 const sql_insert = `
             INSERT INTO tb_aula_aluno_questao (id_aula, id_aluno, id_questao, id_resposta_aluno, tx_tipo, lo_acerto)
@@ -62,16 +58,15 @@ class AulaAlunoQuestao {
             `;
                 const response = yield __1.db.run(sql_insert, [id_aula, id_aluno, id_questao, id_resposta_aluno, tx_tipo, lo_acerto]);
                 if (response) {
-                    const res = yield AlunoModel_1.default.recalculate();
-                    if (res === null || res === void 0 ? void 0 : res.success) {
-                        return {
-                            success: true,
-                            message: 'Questão do aluno criada com sucesso.'
-                        };
-                    }
-                    else {
-                        throw new Error((_a = res === null || res === void 0 ? void 0 : res.message) !== null && _a !== void 0 ? _a : 'Erro ao tentar recalular questões dos alunos.');
-                    }
+                    // const res:any = await Aluno.recalculate();
+                    // if(res?.success){
+                    return {
+                        success: true,
+                        message: 'Questão do aluno criada com sucesso.'
+                    };
+                    // }else{
+                    //     throw new Error(res?.message??'Erro ao tentar recalular questões dos alunos.')
+                    // }
                 }
                 else {
                     throw new Error('Erro ao  tentar criar questão do aluno.');
@@ -81,7 +76,7 @@ class AulaAlunoQuestao {
                 console.error(error);
                 return {
                     success: false,
-                    message: (_b = error === null || error === void 0 ? void 0 : error.message) !== null && _b !== void 0 ? _b : "Erro ao tentar criar questão do aluno."
+                    message: (_a = error === null || error === void 0 ? void 0 : error.message) !== null && _a !== void 0 ? _a : "Erro ao tentar criar questão do aluno."
                 };
             }
         });
@@ -89,7 +84,7 @@ class AulaAlunoQuestao {
     //atualizar questao aula aluno
     static put(id_aula, id_aluno, id_questao, id_resposta_aluno, tx_tipo, lo_acerto) {
         return __awaiter(this, void 0, void 0, function* () {
-            var _a, _b;
+            var _a;
             try {
                 const sql_update = `
             UPDATE tb_aula_aluno_questao
@@ -98,16 +93,15 @@ class AulaAlunoQuestao {
             `;
                 const response = yield __1.db.run(sql_update, [id_resposta_aluno, tx_tipo, lo_acerto, id_aula, id_aluno, id_questao]);
                 if (response) {
-                    const res = yield AlunoModel_1.default.recalculate();
-                    if (res === null || res === void 0 ? void 0 : res.success) {
-                        return {
-                            success: true,
-                            message: 'Questão do aluno atualizada com sucesso.'
-                        };
-                    }
-                    else {
-                        throw new Error((_a = res === null || res === void 0 ? void 0 : res.message) !== null && _a !== void 0 ? _a : 'Erro ao tentar recalular questões dos alunos.');
-                    }
+                    // const res:any = await Aluno.recalculate();
+                    // if(res?.success){
+                    return {
+                        success: true,
+                        message: 'Questão do aluno atualizada com sucesso.'
+                    };
+                    // }else{
+                    //     throw new Error(res?.message??'Erro ao tentar recalular questões dos alunos.')
+                    // }
                 }
                 else {
                     throw new Error('Erro ao tentar atualizar questão do aluno.');
@@ -117,7 +111,40 @@ class AulaAlunoQuestao {
                 console.error(error);
                 return {
                     success: false,
-                    message: (_b = error === null || error === void 0 ? void 0 : error.message) !== null && _b !== void 0 ? _b : "Erro ao tentar atualizar questão do aluno."
+                    message: (_a = error === null || error === void 0 ? void 0 : error.message) !== null && _a !== void 0 ? _a : "Erro ao tentar atualizar questão do aluno."
+                };
+            }
+        });
+    }
+    //deletar todas as questao aula aluno
+    static deleteAll(id_aula, id_aluno) {
+        return __awaiter(this, void 0, void 0, function* () {
+            var _a;
+            try {
+                const sql_delte = `
+            DELETE FROM tb_aula_aluno_questao WHERE id_aula = ? AND id_aluno = ?;
+            `;
+                const response = yield __1.db.run(sql_delte, [id_aula, id_aluno]);
+                if (response) {
+                    // const res:any = await Aluno.recalculate();
+                    // if(res?.success){
+                    return {
+                        success: true,
+                        message: 'Questões do aluno deletadas com sucesso.'
+                    };
+                    // }else{
+                    //     throw new Error(res?.message??'Erro ao tentar recalular questões dos alunos.')
+                    // }
+                }
+                else {
+                    throw new Error('Erro ao  tentar deletar questões do aluno.');
+                }
+            }
+            catch (error) {
+                console.error(error);
+                return {
+                    success: false,
+                    message: (_a = error === null || error === void 0 ? void 0 : error.message) !== null && _a !== void 0 ? _a : "Erro ao tentar deletar questões do aluno."
                 };
             }
         });

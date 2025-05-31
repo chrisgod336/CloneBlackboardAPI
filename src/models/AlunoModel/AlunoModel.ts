@@ -68,6 +68,7 @@ export default class Aluno {
             const response = await db.all(sql_search, [id]);
 
             //##AGENTE GESTOR##//
+            //Montar feedback do aluno, retornar os dados para o gréfico e salvar o novo nível
             const feedback =  'O aluno está tendo um bom desempenho de aprendizando com textos e imagens, porém vem apresentando défities de aprendizados com vídeos. Mesmo assim o aluno está acima da média e apresenta um bom desempenho geral.';
 
             if(response && response.length){
@@ -233,58 +234,58 @@ export default class Aluno {
     }
 
     //recalcular questoes de todos alunos
-    public static async recalculate(): Promise<object> {
-        try{
+    // public static async recalculate(): Promise<object> {
+    //     try{
 
-            const sql_search = `SELECT id FROM tb_aluno`;
+    //         const sql_search = `SELECT id FROM tb_aluno`;
 
-            const response = await db.all(sql_search);
+    //         const response = await db.all(sql_search);
 
-            if(response){
-                for (const aluno of response) {
-                    const id = aluno?.id;
-                    if(id){
-                        const sql_count = `
-                        SELECT 
-                            (SELECT COUNT(*) FROM  tb_aula_aluno_questao WHERE id_aluno = ? AND lo_acerto = 'S' AND tx_tipo = 'texto') AS nu_acertos_texto,
-                            (SELECT COUNT(*) FROM  tb_aula_aluno_questao WHERE id_aluno = ? AND lo_acerto = 'N' AND tx_tipo = 'texto') AS nu_erros_texto,
-                            (SELECT COUNT(*) FROM  tb_aula_aluno_questao WHERE id_aluno = ? AND lo_acerto = 'S' AND tx_tipo = 'imagem') AS nu_acertos_imagem,
-                            (SELECT COUNT(*) FROM  tb_aula_aluno_questao WHERE id_aluno = ? AND lo_acerto = 'N' AND tx_tipo = 'imagem') AS nu_erros_imagem,
-                            (SELECT COUNT(*) FROM  tb_aula_aluno_questao WHERE id_aluno = ? AND lo_acerto = 'S' AND tx_tipo = 'video') AS nu_acertos_video,
-                            (SELECT COUNT(*) FROM  tb_aula_aluno_questao WHERE id_aluno = ? AND lo_acerto = 'N' AND tx_tipo = 'video') AS nu_erros_video
-                        `;
+    //         if(response){
+    //             for (const aluno of response) {
+    //                 const id = aluno?.id;
+    //                 if(id){
+    //                     const sql_count = `
+    //                     SELECT 
+    //                         (SELECT COUNT(*) FROM  tb_aula_aluno_questao WHERE id_aluno = ? AND lo_acerto = 'S' AND tx_tipo = 'texto') AS nu_acertos_texto,
+    //                         (SELECT COUNT(*) FROM  tb_aula_aluno_questao WHERE id_aluno = ? AND lo_acerto = 'N' AND tx_tipo = 'texto') AS nu_erros_texto,
+    //                         (SELECT COUNT(*) FROM  tb_aula_aluno_questao WHERE id_aluno = ? AND lo_acerto = 'S' AND tx_tipo = 'imagem') AS nu_acertos_imagem,
+    //                         (SELECT COUNT(*) FROM  tb_aula_aluno_questao WHERE id_aluno = ? AND lo_acerto = 'N' AND tx_tipo = 'imagem') AS nu_erros_imagem,
+    //                         (SELECT COUNT(*) FROM  tb_aula_aluno_questao WHERE id_aluno = ? AND lo_acerto = 'S' AND tx_tipo = 'video') AS nu_acertos_video,
+    //                         (SELECT COUNT(*) FROM  tb_aula_aluno_questao WHERE id_aluno = ? AND lo_acerto = 'N' AND tx_tipo = 'video') AS nu_erros_video
+    //                     `;
 
-                        const response_count = await db.all(sql_count, [id, id, id, id, id, id]);
+    //                     const response_count = await db.all(sql_count, [id, id, id, id, id, id]);
 
-                        if(response_count && response_count.length){
-                            const nu_acertos_texto = response_count[0]?.nu_acertos_texto??0
-                            const nu_erros_texto = response_count[0]?.nu_erros_texto??0
-                            const nu_acertos_imagem = response_count[0]?.nu_acertos_imagem??0
-                            const nu_erros_imagem = response_count[0]?.nu_erros_imagem??0
-                            const nu_acertos_video = response_count[0]?.nu_acertos_video??0
-                            const nu_erros_video = response_count[0]?.nu_erros_video??0
+    //                     if(response_count && response_count.length){
+    //                         const nu_acertos_texto = response_count[0]?.nu_acertos_texto??0
+    //                         const nu_erros_texto = response_count[0]?.nu_erros_texto??0
+    //                         const nu_acertos_imagem = response_count[0]?.nu_acertos_imagem??0
+    //                         const nu_erros_imagem = response_count[0]?.nu_erros_imagem??0
+    //                         const nu_acertos_video = response_count[0]?.nu_acertos_video??0
+    //                         const nu_erros_video = response_count[0]?.nu_erros_video??0
 
-                            const sql_update = `
-                            UPDATE tb_aluno 
-                            SET nu_acertos_texto = ?, nu_erros_texto = ?, nu_acertos_imagem = ?, nu_erros_imagem = ?, nu_acertos_video = ?, nu_erros_video = ?
-                            `;
+    //                         const sql_update = `
+    //                         UPDATE tb_aluno 
+    //                         SET nu_acertos_texto = ?, nu_erros_texto = ?, nu_acertos_imagem = ?, nu_erros_imagem = ?, nu_acertos_video = ?, nu_erros_video = ?
+    //                         `;
 
-                            const response_update = await db.run(sql_update, [nu_acertos_texto, nu_erros_texto, nu_acertos_imagem, nu_erros_imagem, nu_acertos_video, nu_erros_video]);
-                        }
-                    }
-                }
-            }
+    //                         const response_update = await db.run(sql_update, [nu_acertos_texto, nu_erros_texto, nu_acertos_imagem, nu_erros_imagem, nu_acertos_video, nu_erros_video]);
+    //                     }
+    //                 }
+    //             }
+    //         }
 
-            return {
-                success: true,
-                message: 'Questões dos alunos recalculadas com sucesso.'
-            };
-        }catch(error:any){
-            console.error(error);
-            return {
-                success: false,
-                message: error?.message??'Erro ao tentar recalcular questões dos alunos.',
-            }
-        }
-    }
+    //         return {
+    //             success: true,
+    //             message: 'Questões dos alunos recalculadas com sucesso.'
+    //         };
+    //     }catch(error:any){
+    //         console.error(error);
+    //         return {
+    //             success: false,
+    //             message: error?.message??'Erro ao tentar recalcular questões dos alunos.',
+    //         }
+    //     }
+    // }
 }

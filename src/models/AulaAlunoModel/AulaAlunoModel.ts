@@ -113,6 +113,8 @@ export default class AulaAluno {
     public static async make(id_aluno:number): Promise<object>{
         try{
 
+            //Verifica se a aula ja existe, se já manda para o Avalidar, se não para o tutor
+
             /** CHAMADA DO AGENTE TUTOR **/
             const aula = {
                 tx_parte1: 'texto',

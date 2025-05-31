@@ -44,9 +44,10 @@ router.get('/aluno/get', asyncHandler(Controllers_6.AlunoController.get));
 router.post('/aluno/post', asyncHandler(Controllers_6.AlunoController.post));
 router.put('/aluno/put', asyncHandler(Controllers_6.AlunoController.put));
 router.delete('/aluno/delete', asyncHandler(Controllers_6.AlunoController.delete));
-router.put('/aluno/recalculate', asyncHandler(Controllers_6.AlunoController.recalculate));
+//router.put('/aluno/recalculate', asyncHandler(AlunoController.recalculate));
 //Aula Aluno Questão Routes
 router.get('/aulaAlunoQuestao/getAll', asyncHandler(Controllers_7.AulaAlunoQuestaoController.getAll));
 router.post('/aulaAlunoQuestao/post', asyncHandler(Controllers_7.AulaAlunoQuestaoController.post));
 router.put('/aulaAlunoQuestao/put', asyncHandler(Controllers_7.AulaAlunoQuestaoController.put));
+router.delete('/aulaAlunoQuestao/deleteAll', asyncHandler(Controllers_7.AulaAlunoQuestaoController.deleteAll));
 exports.default = router;

@@ -20,6 +20,9 @@ class AulaQuestao {
         this.tx_alternativas = tx_alternativas;
         this.id_resposta = id_resposta;
     }
+    getIdResposta() {
+        return this.id_resposta;
+    }
     //buscas questoes da aula
     static getAll(id_aula) {
         return __awaiter(this, void 0, void 0, function* () {

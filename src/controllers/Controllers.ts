@@ -123,9 +123,15 @@ export class AulaAlunoController {
      }
 
      public static async make(req:Request, res:Response) {
-        const { id_aluno } = req.query as { id_aluno: string };
-        const response = await AulaAluno.make(Number(id_aluno));
-        return res.status(200).json(response);
+        const { id_aluno, id_aula } = req.query as { id_aluno: string, id_aula:string|undefined };
+        
+        if(id_aula){
+            const response = await AulaAluno.make(Number(id_aluno), Number(id_aula));
+            return res.status(200).json(response);
+        }else{
+            const response = await AulaAluno.make(Number(id_aluno));
+            return res.status(200).json(response);
+        }
      }
 }
 

@@ -1,5 +1,8 @@
 import { db } from "../../..";
-
+import Agents from "../Agents/AgentModel";
+import Aluno from "../AlunoModel/AlunoModel";
+import AulaAlunoQuestao from "../AulaAlunoQuestaoModel/AulaAlunoQuestao";
+import AulaQuestao from "../AulaQuestaoModel/AulaQuestaoModel";
 export default class AulaAluno {
     private id_aluno:number;
     private id_aula:number;
@@ -110,22 +113,119 @@ export default class AulaAluno {
     }
 
     //Monta aula para o aluno
-    public static async make(id_aluno:number): Promise<object>{
+    public static async make(
+        id_aluno:number,
+        id_aula?:number
+    ): Promise<object>{
         try{
-
             //Verifica se a aula ja existe, se já manda para o Avalidar, se não para o tutor
+            if(id_aula){
 
-            /** CHAMADA DO AGENTE TUTOR **/
-            const aula = {
-                tx_parte1: 'texto',
-                tx_parte2: 'imagem',
-                tx_parte3: 'video',
-            }
+                //Buscar dados das questões da aula
+                const sql_search1 = `
+                SELECT id_resposta_aluno, tx_tipo
+                    FROM tb_aula_aluno_questao
+                    WHERE id_aula = ? AND id_aluno = ?
+                    ORDER BY id_questao
+                    LIMIT 15;
+                `;
 
-            return {
-                success: true,
-                message: 'Aula do aluno montada com sucesso',
-                data: aula
+                const response1 = await db.all(sql_search1, [id_aula, id_aluno]);
+
+                const sql_search2 = `
+                SELECT id_resposta
+                    FROM tb_aula_questao
+                    WHERE id_aula = ?
+                    ORDER BY id
+                    LIMIT 15;
+                `;
+
+                const response2 = await db.all(sql_search2, [id_aula]);
+                
+                if(response1 && response1?.length == 15 && response2 && response2?.length == 15){
+
+                    const questoes:any = response1?.map((item: any, index:number) => {
+
+                            const questaoAula = response2[index];
+
+                            return {
+                                resposta_correta: questaoAula?.id_resposta.toString(),
+                                resposta_aluno: item?.id_resposta_aluno.toString(),
+                                tipo: item?.tx_tipo
+                            }
+                        });
+
+                    /** CHAMADA DO AGENTE AVALIDOR **/
+
+                    const res = await Agents.Avaliador({questoes: questoes});
+                   
+                    const partes = res?.data?.partes?.partes;
+
+                    if(res?.success && res?.data){
+                        return {
+                            success: true,
+                            message: "Aula do aluno remontada com sucesso.",
+                            data: {
+                                tx_parte1: partes.parte1,
+                                tx_parte2: partes.parte2,
+                                tx_parte3: partes.parte3,
+                            }
+                        }
+                    }else{
+                        throw new Error(res?.message??'Erro ao tentar buscar dados do Avalidor.');
+                    }
+
+                }else{
+                    throw new Error('Erro ao tentar buscar questões da aula do aluno.');
+                }
+                
+
+            }else{
+
+                //Buscar dados do aluno
+                const response:any = await Aluno.get(id_aluno);
+
+                if(response?.success && response?.data){
+
+                    const sql_search = `
+                    SELECT nu_acertos_texto, nu_erros_texto, nu_acertos_imagem, nu_erros_imagem, nu_acertos_video, nu_erros_video
+                    FROM tb_aluno
+                    WHERE id = ?
+                    `;
+
+                    const ret = await db.all(sql_search, [id_aluno]);
+                    const aluno = ret[0];  
+
+                    /** CHAMADA DO AGENTE TUTOR **/
+                    const alunoData = {
+                        nu_acertos_texto: aluno?.nu_acertos_texto,
+                        nu_erros_texto: aluno?.nu_erros_texto,
+                        nu_acertos_imagem: aluno?.nu_acertos_imagem,
+                        nu_erros_imagem: aluno?.nu_erros_imagem,
+                        nu_acertos_video: aluno?.nu_acertos_video,
+                        nu_erros_video: aluno?.nu_erros_video
+                    }
+
+                    const res = await Agents.Tutor(alunoData);
+
+                    if(res?.success && res?.data){
+                        const partes = res?.data?.partes;
+                        return {
+                            success: true,
+                            message: 'Aula do aluno montada com sucesso',
+                            data: {
+                                tx_parte1: partes.parte1,
+                                tx_parte2: partes.parte2,
+                                tx_parte3: partes.parte3
+                            }
+                        }
+                    }else{
+                        throw new Error(res?.message??'Erro ao tentar buscar dados do Tutor.');
+                    }
+
+                }else{
+                    throw new Error('Erro ao tentar encontrar Aluno.');
+                }  
             }
 
         }catch(error:any){

@@ -17,6 +17,10 @@ export default class AulaQuestao {
         this.id_resposta = id_resposta;
     }
 
+    public getIdResposta():number {
+        return this.id_resposta;
+    }
+
     //buscas questoes da aula
     public static async getAll(id_aula:number): Promise<object> {
         try{

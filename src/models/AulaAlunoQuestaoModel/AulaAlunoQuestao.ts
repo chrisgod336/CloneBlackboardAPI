@@ -17,6 +17,18 @@ export default class AulaAlunoQuestao {
         this.lo_acerto = lo_acerto;
     }
 
+    public getIdRespotaAluno():number {
+        return this.id_resposta_aluno;
+    }
+
+    public getTxTipo():string {
+        return this.tx_tipo;
+    }
+
+    public getLoAcerto():string{
+        return this.lo_acerto;
+    }
+
     //buscar questoes aula aluno
     public static async getAll(id_aula:number, id_aluno:number): Promise<object>{
         try{

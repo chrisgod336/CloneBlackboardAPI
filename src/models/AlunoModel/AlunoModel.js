@@ -8,8 +8,12 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 const __1 = require("../../..");
+const AgentModel_1 = __importDefault(require("../Agents/AgentModel"));
 class Aluno {
     constructor(id, tx_nome, tx_login, tx_senha, tx_nivel, nu_acertos_texto, nu_erros_texto, nu_acertos_imagem, nu_erros_imagem, nu_acertos_video, nu_erros_video) {
         this.id = id;
@@ -23,6 +27,36 @@ class Aluno {
         this.nu_erros_imagem = nu_erros_imagem;
         this.nu_acertos_video = nu_acertos_video;
         this.nu_erros_video = nu_erros_video;
+    }
+    getId() {
+        return this.id;
+    }
+    getTxNome() {
+        return this.tx_nome;
+    }
+    getTxLogin() {
+        return this.tx_login;
+    }
+    getTxNivel() {
+        return this.tx_nivel;
+    }
+    getNuAcertosTexto() {
+        return this.nu_acertos_texto;
+    }
+    getNuErrosTexto() {
+        return this.nu_erros_texto;
+    }
+    getNuAcertosImagem() {
+        return this.nu_acertos_imagem;
+    }
+    getNuErrosImagem() {
+        return this.nu_erros_imagem;
+    }
+    getNuAcertosVideo() {
+        return this.nu_acertos_video;
+    }
+    getNuErrosVideo() {
+        return this.nu_erros_video;
     }
     //login do aluno
     static login(tx_login, tx_senha) {
@@ -57,19 +91,49 @@ class Aluno {
     //buscar dados do aluno
     static get(id) {
         return __awaiter(this, void 0, void 0, function* () {
-            var _a;
+            var _a, _b, _c;
             try {
                 const sql_search = `SELECT * FROM tb_aluno WHERE id = ?`;
                 const response = yield __1.db.all(sql_search, [id]);
-                //##AGENTE GESTOR##//
-                //Montar feedback do aluno, retornar os dados para o gréfico e salvar o novo nível
-                const feedback = 'O aluno está tendo um bom desempenho de aprendizando com textos e imagens, porém vem apresentando défities de aprendizados com vídeos. Mesmo assim o aluno está acima da média e apresenta um bom desempenho geral.';
                 if (response && response.length) {
-                    return {
-                        success: true,
-                        message: 'Aluno encontrado com sucesso.',
-                        data: Object.assign(Object.assign({}, response[0]), { feedback: feedback })
+                    const alunoData = response[0];
+                    const texto = {
+                        acertos: (alunoData === null || alunoData === void 0 ? void 0 : alunoData.nu_acertos_texto) | 0,
+                        erros: (alunoData === null || alunoData === void 0 ? void 0 : alunoData.nu_erros_texto) | 0,
                     };
+                    const imagem = {
+                        acertos: (alunoData === null || alunoData === void 0 ? void 0 : alunoData.nu_acertos_imagem) | 0,
+                        erros: (alunoData === null || alunoData === void 0 ? void 0 : alunoData.nu_erros_imagem) | 0,
+                    };
+                    const video = {
+                        acertos: (alunoData === null || alunoData === void 0 ? void 0 : alunoData.nu_acertos_video) | 0,
+                        erros: (alunoData === null || alunoData === void 0 ? void 0 : alunoData.nu_erros_video) | 0,
+                    };
+                    // ##AGENTE GESTOR##//
+                    const res = yield AgentModel_1.default.Gestor({
+                        imagem: imagem,
+                        texto: texto,
+                        video: video
+                    });
+                    if ((res === null || res === void 0 ? void 0 : res.success) && (res === null || res === void 0 ? void 0 : res.data)) {
+                        const tx_nivel = res.data.tx_nivel;
+                        if (tx_nivel) {
+                            const sql_update = `
+                        UPDATE tb_aluno
+                        SET tx_nivel = ?
+                        WHERE id = ?
+                        `;
+                            yield __1.db.run(sql_update, [tx_nivel, id]);
+                        }
+                        return {
+                            success: true,
+                            message: 'Aluno encontrado com sucesso.',
+                            data: Object.assign(Object.assign({}, alunoData), { feedback: (_a = res === null || res === void 0 ? void 0 : res.data) === null || _a === void 0 ? void 0 : _a.feedback })
+                        };
+                    }
+                    else {
+                        throw new Error((_b = res === null || res === void 0 ? void 0 : res.message) !== null && _b !== void 0 ? _b : 'Erro ao tentar buscar dados do agente Avalidor');
+                    }
                 }
                 else {
                     throw new Error('Erro ao tentar buscar dados do aluno.');
@@ -79,7 +143,7 @@ class Aluno {
                 console.error(error);
                 return {
                     success: false,
-                    message: (_a = error === null || error === void 0 ? void 0 : error.message) !== null && _a !== void 0 ? _a : "Erro ao tentar buscar dados do aluno."
+                    message: (_c = error === null || error === void 0 ? void 0 : error.message) !== null && _c !== void 0 ? _c : "Erro ao tentar buscar dados do aluno."
                 };
             }
         });

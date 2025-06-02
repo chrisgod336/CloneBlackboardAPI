@@ -164,9 +164,15 @@ class AulaAlunoController {
     }
     static make(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const { id_aluno } = req.query;
-            const response = yield AulaAlunoModel_1.default.make(Number(id_aluno));
-            return res.status(200).json(response);
+            const { id_aluno, id_aula } = req.query;
+            if (id_aula) {
+                const response = yield AulaAlunoModel_1.default.make(Number(id_aluno), Number(id_aula));
+                return res.status(200).json(response);
+            }
+            else {
+                const response = yield AulaAlunoModel_1.default.make(Number(id_aluno));
+                return res.status(200).json(response);
+            }
         });
     }
 }

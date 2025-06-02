@@ -1,4 +1,5 @@
 import { db } from "../../..";
+import Agents from "../Agents/AgentModel";
 
 export default class Aluno {
     private id:number;
@@ -27,6 +28,46 @@ export default class Aluno {
         this.nu_erros_imagem = nu_erros_imagem;
         this.nu_acertos_video = nu_acertos_video;
         this.nu_erros_video = nu_erros_video;
+    }
+
+    public getId():number{
+        return this.id;
+    }
+
+    public getTxNome():string{
+        return this.tx_nome;
+    }
+
+    public getTxLogin():string{
+        return this.tx_login;
+    }
+
+    public getTxNivel():string{
+        return this.tx_nivel;
+    }
+
+    public getNuAcertosTexto():number{
+        return this.nu_acertos_texto;
+    }
+
+    public getNuErrosTexto():number{
+        return this.nu_erros_texto;
+    }
+
+    public getNuAcertosImagem():number{
+        return this.nu_acertos_imagem;
+    }
+
+    public getNuErrosImagem():number{
+        return this.nu_erros_imagem;
+    }
+
+    public getNuAcertosVideo():number{
+        return this.nu_acertos_video;
+    }
+
+    public getNuErrosVideo():number{
+        return this.nu_erros_video;
     }
 
     //login do aluno
@@ -66,17 +107,56 @@ export default class Aluno {
             const sql_search = `SELECT * FROM tb_aluno WHERE id = ?`;
 
             const response = await db.all(sql_search, [id]);
-
-            //##AGENTE GESTOR##//
-            //Montar feedback do aluno, retornar os dados para o gréfico e salvar o novo nível
-            const feedback =  'O aluno está tendo um bom desempenho de aprendizando com textos e imagens, porém vem apresentando défities de aprendizados com vídeos. Mesmo assim o aluno está acima da média e apresenta um bom desempenho geral.';
-
+            
             if(response && response.length){
-                return {
-                    success: true,
-                    message: 'Aluno encontrado com sucesso.',
-                    data: {...response[0], feedback: feedback}
+
+                const alunoData = response[0];
+                
+                const texto = {
+                    acertos: alunoData?.nu_acertos_texto|0,
+                    erros: alunoData?.nu_erros_texto|0,
                 }
+
+                const imagem = {
+                    acertos: alunoData?.nu_acertos_imagem|0,
+                    erros: alunoData?.nu_erros_imagem|0,
+                }
+
+                const video = {
+                    acertos: alunoData?.nu_acertos_video|0,
+                    erros: alunoData?.nu_erros_video|0,
+                }
+
+                // ##AGENTE GESTOR##//
+                const res = await Agents.Gestor({
+                    imagem: imagem,
+                    texto: texto,
+                    video: video
+                });
+
+                if(res?.success && res?.data){
+
+                    const tx_nivel = res.data.tx_nivel;
+
+                    if(tx_nivel){
+                        const sql_update = `
+                        UPDATE tb_aluno
+                        SET tx_nivel = ?
+                        WHERE id = ?
+                        `;
+
+                        await db.run(sql_update, [tx_nivel, id]);
+                    }
+
+                     return {
+                        success: true,
+                        message: 'Aluno encontrado com sucesso.',
+                        data: {...alunoData, feedback: res?.data?.feedback}
+                    }
+                }else{
+                    throw new Error(res?.message??'Erro ao tentar buscar dados do agente Avalidor');
+                }
+
             }else{
                 throw new Error('Erro ao tentar buscar dados do aluno.');
             }

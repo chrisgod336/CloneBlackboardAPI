@@ -19,6 +19,15 @@ class AulaAlunoQuestao {
         this.tx_tipo = tx_tipo;
         this.lo_acerto = lo_acerto;
     }
+    getIdRespotaAluno() {
+        return this.id_resposta_aluno;
+    }
+    getTxTipo() {
+        return this.tx_tipo;
+    }
+    getLoAcerto() {
+        return this.lo_acerto;
+    }
     //buscar questoes aula aluno
     static getAll(id_aula, id_aluno) {
         return __awaiter(this, void 0, void 0, function* () {
